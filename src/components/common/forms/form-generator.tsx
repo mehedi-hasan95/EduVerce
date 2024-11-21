@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   FormControl,
   FormField,
@@ -38,6 +37,7 @@ export const FormGenerator = ({
   name,
   rows,
   options,
+  type,
 }: Props) => {
   switch (inputType) {
     case "input":
@@ -49,7 +49,12 @@ export const FormGenerator = ({
             <FormItem>
               {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
               <FormControl>
-                <Input id={id} placeholder={placeholder} {...field} />
+                <Input
+                  type={type}
+                  id={id}
+                  placeholder={placeholder}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

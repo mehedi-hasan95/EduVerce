@@ -1,4 +1,4 @@
-type Props = {
+type AuthProps = {
   id: string;
   type?: "text" | "email" | "password" | "number";
   inputType: "select" | "input" | "textarea";
@@ -11,8 +11,8 @@ type Props = {
 const options = [
   {
     id: "1",
-    value: "STUDENT",
-    label: "Student",
+    value: "USER",
+    label: "User",
   },
   {
     id: "2",
@@ -20,30 +20,72 @@ const options = [
     label: "Teacher",
   },
 ];
-export const REGISTER_FORM: Props[] = [
+export const REGISTER_FORM: AuthProps[] = [
   {
     id: "1",
     type: "text",
     inputType: "input",
-    placeholder: "Your First Name",
+    placeholder: "Mehedi",
     label: "First Name",
-    name: "username",
+    name: "firstName",
   },
   {
     id: "2",
     type: "text",
-    inputType: "textarea",
-    placeholder: "Your Bio",
-    label: "Your Bio",
-    name: "bio",
+    inputType: "input",
+    placeholder: "Hasan",
+    label: "Last Name",
+    name: "lastName",
   },
   {
     id: "3",
-    // type: "text",
+    inputType: "input",
+    type: "email",
+    placeholder: "me@me.com",
+    label: "Email",
+    name: "email",
+  },
+  {
+    id: "4",
     inputType: "select",
-    placeholder: "Your Bio",
-    label: "Your Bio",
-    name: "role",
+    placeholder: "Your User Role",
+    label: "User Role",
+    name: "userRole",
     options: options,
+  },
+  {
+    id: "5",
+    inputType: "input",
+    type: "password",
+    placeholder: "***",
+    label: "Password",
+    name: "password",
+  },
+  {
+    id: "6",
+    inputType: "input",
+    type: "password",
+    placeholder: "***",
+    label: "Confirm Password",
+    name: "cPassword",
+  },
+];
+
+export const LOGIN_FORM: AuthProps[] = [
+  {
+    id: "1",
+    type: "email",
+    inputType: "input",
+    placeholder: "me@me.com",
+    label: "Email",
+    name: "email",
+  },
+  {
+    id: "2",
+    type: "password",
+    inputType: "input",
+    placeholder: "*******",
+    label: "Password",
+    name: "password",
   },
 ];

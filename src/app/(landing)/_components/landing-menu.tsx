@@ -52,7 +52,7 @@ export const LandingMenu = ({ oriantation }: Props) => {
 
     case "Mobile":
       return (
-        <div className="">
+        <div className="md:hidden">
           <Sheet>
             <SheetTrigger>
               <Menu className="h-6 w-6" />

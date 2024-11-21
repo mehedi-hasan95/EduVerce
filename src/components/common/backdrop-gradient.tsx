@@ -10,7 +10,10 @@ const BackdropGradient = ({ children, className, containerClass }: Props) => {
   return (
     <div className={cn("relative w-full flex flex-col", containerClass)}>
       <div
-        className={cn("absolute rounded-[50%] radial--blur mx-10", className)}
+        className={cn(
+          "absolute rounded-[50%] radial--blur mx-10 z-0",
+          className
+        )}
       />
       {children}
     </div>

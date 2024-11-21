@@ -8,7 +8,7 @@ export const Logo = ({ className }: Props) => {
       href={"/"}
       className={cn("text-xl md:text-2xl lg:text-3xl font-bold", className)}
     >
-      Logo
+      EduVarse
     </Link>
   );
 };

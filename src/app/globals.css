@@ -11,6 +11,11 @@ html {
   scroll-behavior: smooth !important;
 }
 
+html,
+body,
+:root {
+  height: 100%;
+}
 .radial {
   background-image: radial-gradient(
     ellipse farthest-side,
