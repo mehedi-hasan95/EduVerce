@@ -16,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 type Props = {
   oriantation: "Desktop" | "Mobile";
@@ -23,12 +24,16 @@ type Props = {
 
 export const LandingMenu = ({ oriantation }: Props) => {
   const { onSetSection, section } = useNavigation();
+  const { isSignedIn } = useUser();
+  const visibleMenus = LANDING_MENUS.filter(
+    (menu) => isSignedIn || !menu.hasUser
+  );
   switch (oriantation) {
     case "Desktop":
       return (
         <Card className="bg-themeGray border-themeGray bg-clip-padding backdrop--blur__safari backdrop-filter backdrop-blur-2xl bg-opacity-60 p-1 md:flex hidden rounded-xl">
           <CardContent className="flex gap-2 p-0">
-            {LANDING_MENUS.map((item) => (
+            {visibleMenus.map((item) => (
               <Link
                 href={item.href}
                 key={item.id}

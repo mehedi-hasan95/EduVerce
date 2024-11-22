@@ -1,0 +1,13 @@
+### Create user account 
+## The api name is "onCreateAccount" and it's dependency is like 
+data: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userRole: User_Role;
+  clerkId: string;
+  image: string;
+} 
+
+### User Details 
+## Api: "onGetUserDetails". It doesn't depend anyting

@@ -2,16 +2,25 @@
 
 import { FormGenerator } from "@/components/common/forms/form-generator";
 import { LOGIN_FORM } from "@/components/common/forms/form-list";
+import { LoadingButton } from "@/components/common/loading-button";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { LoginSchema } from "@/schemas/auth.schema";
+import { useSignIn } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const SignIn = () => {
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
   // 1. Define your form.
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -22,10 +31,35 @@ const SignIn = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof LoginSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof LoginSchema>) {
+    if (!isLoaded) {
+      return toast("Error", { description: "Opps! Something went" });
+    }
+    try {
+      setLoading(true);
+      const signInAttempt = await signIn.create({
+        identifier: values.email,
+        password: values.password,
+      });
+      if (signInAttempt.status === "complete") {
+        form.reset();
+        await setActive({ session: signInAttempt.createdSessionId });
+        toast("Success", { description: "Welcome back!❤️❤️" });
+        setLoading(false);
+        router.push("/callback/sign-in");
+      } else {
+        // If the status is not complete, check why. User may need to
+        // complete further steps.
+        console.error(JSON.stringify(signInAttempt, null, 2));
+      }
+    } catch (error: any) {
+      if (error.errors[0].code === "form_identifier_not_found")
+        toast("Error", {
+          description: "email/password is incorrect try again 😣😣",
+        });
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <>
@@ -39,7 +73,17 @@ const SignIn = () => {
           {LOGIN_FORM.map((item) => (
             <FormGenerator key={item.id} {...item} form={form} />
           ))}
-          <Button type="submit">Submit</Button>
+          {loading ? (
+            <LoadingButton className="w-full" />
+          ) : (
+            <Button
+              type="submit"
+              className="w-full bg-themeDarkGray"
+              variant={"outline"}
+            >
+              Continue <ChevronRight />
+            </Button>
+          )}
         </form>
       </Form>
       <div className="my-10 w-full relative">

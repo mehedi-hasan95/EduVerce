@@ -31,6 +31,14 @@ const SignUp = () => {
   const [creating, setCreating] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const [formValues, setFormValues] = useState<z.infer<typeof RegisterSchema>>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    userRole: "USER",
+    password: "",
+    cPassword: "",
+  });
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -45,19 +53,19 @@ const SignUp = () => {
   });
 
   // Get the email and password for verification code
-  const onGenerateCode = async (email: string, password: string) => {
+  async function onSubmit(values: z.infer<typeof RegisterSchema>) {
     if (!isLoaded)
       return toast("Error", {
         description: "Oops! something went wrong",
       });
     try {
       setLoading(true);
-      if (email && password) {
+      if (values.email && values.password) {
         await signUp.create({
-          emailAddress: email,
-          password: password,
+          emailAddress: values.email,
+          password: values.password,
         });
-
+        setFormValues({ ...values });
         await signUp.prepareEmailAddressVerification({
           strategy: "email_code",
         });
@@ -75,10 +83,10 @@ const SignUp = () => {
         return toast("Error", { description: error.errors[0].message });
       }
     }
-  };
+  }
 
-  // After the code
-  async function onSubmit(values: z.infer<typeof RegisterSchema>) {
+  // After the verification code
+  async function onSubmitOTP() {
     if (!isLoaded)
       return toast("Error", { description: "Something went wrong" });
     try {
@@ -95,12 +103,12 @@ const SignUp = () => {
       if (signUpAttempt.status === "complete") {
         if (!signUp.createdUserId) return;
         const user = await onCreateAccount({
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
+          firstName: formValues.firstName,
+          lastName: formValues.lastName,
+          email: formValues.email,
           clerkId: signUp.createdUserId,
           image: "",
-          userRole: values.userRole,
+          userRole: formValues.userRole,
         });
         if (user.status === 200) {
           toast("Success", { description: user.message });
@@ -134,29 +142,50 @@ const SignUp = () => {
         </p>
       </div>
       <div className="z-50 pt-5">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {verifying ? (
-              <div className="flex mb-5 flex-col items-center">
-                <h2 className="dark:text-gradient text-2xl font-bold pb-3">
-                  Add your Verification Code:
-                </h2>
-                <OTPInput otp={code} setOtp={setCode} />
-              </div>
-            ) : (
-              <>
+        {verifying ? (
+          <>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmitOTP)}
+                className="space-y-8"
+              >
+                <div className="flex mb-5 flex-col items-center">
+                  <h2 className="dark:text-gradient text-2xl font-bold pb-3">
+                    Add your Verification Code:
+                  </h2>
+                  <OTPInput otp={code} setOtp={setCode} />
+                  <div className="pt-5">
+                    {creating ? (
+                      <LoadingButton />
+                    ) : (
+                      <Button
+                        disabled={creating}
+                        type="submit"
+                        className="rounded-2xl w-full"
+                        variant={"outline"}
+                      >
+                        Continue <ChevronRight />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </form>
+            </Form>
+          </>
+        ) : (
+          <>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
                 {REGISTER_FORM.map((item) => (
                   <FormGenerator key={item.id} {...item} form={form} />
                 ))}
-              </>
-            )}
-            {verifying ? (
-              <>
-                {creating ? (
+                {loading ? (
                   <LoadingButton />
                 ) : (
                   <Button
-                    disabled={creating}
                     type="submit"
                     className="rounded-2xl w-full"
                     variant={"outline"}
@@ -164,30 +193,10 @@ const SignUp = () => {
                     Continue <ChevronRight />
                   </Button>
                 )}
-              </>
-            ) : (
-              <>
-                {loading ? (
-                  <LoadingButton />
-                ) : (
-                  <Button
-                    type="button"
-                    className="rounded-2xl w-full"
-                    variant={"outline"}
-                    onClick={() =>
-                      onGenerateCode(
-                        form.getValues("email"),
-                        form.getValues("password")
-                      )
-                    }
-                  >
-                    Continue <ChevronRight />
-                  </Button>
-                )}
-              </>
-            )}
-          </form>
-        </Form>
+              </form>
+            </Form>
+          </>
+        )}
       </div>
       <div className="my-10 w-full relative">
         <div className="bg-black p-3 absolute text-themeTextGray text-xs top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
