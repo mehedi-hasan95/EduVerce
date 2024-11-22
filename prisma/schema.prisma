@@ -15,8 +15,8 @@ enum User_Role {
 
 model User {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firstname String
-  lastname  String
+  firstName String
+  lastName  String
   email     String
   userRole  User_Role @default(USER)
   createdAt DateTime  @default(now())
