@@ -14,11 +14,11 @@ export function LandingScrollSection() {
               element="H1"
               className="text-2xl md:text-3xl lg:text-5xl"
             >
-              EduVarse: Your Gateway to Knowledge.
+              EduVerse: Your Gateway to Knowledge.
               <p className="text-lg font-normal pt-3">
-                EduVarse is a comprehensive learning management system designed
+                EduVerse is a comprehensive learning management system designed
                 to revolutionize the way you learn and teach. With a
-                user-friendly interface and powerful features, EduVarse empowers
+                user-friendly interface and powerful features, EduVerse empowers
                 educators to create engaging courses and track student progress
                 seamlessly.
               </p>

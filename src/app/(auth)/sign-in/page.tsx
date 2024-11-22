@@ -2,6 +2,7 @@
 
 import { FormGenerator } from "@/components/common/forms/form-generator";
 import { LOGIN_FORM } from "@/components/common/forms/form-list";
+import { GoogleAuthButton } from "@/components/common/google-auth-button";
 import { LoadingButton } from "@/components/common/loading-button";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -63,8 +64,10 @@ const SignIn = () => {
   }
   return (
     <>
-      <h5 className="font-bold text-base text-themeTextWhite">Login</h5>
-      <p className="text-themeTextGray leading-tight">
+      <h5 className="font-bold text-base text-themeTextWhite text-center">
+        Login
+      </h5>
+      <p className="text-themeTextGray leading-tight text-center pb-5">
         Network with people from around the world, join groups, create your own,
         watch courses and become the best version of yourself.
       </p>
@@ -92,7 +95,7 @@ const SignIn = () => {
         </div>
         <Separator orientation="horizontal" className="bg-themeGray" />
       </div>
-      {/* to do  */}
+      <GoogleAuthButton method="SignIn" />
       <p className="flex justify-end gap-2">
         Don&apos;t have an account?{" "}
         <Link href="/sign-up" className="text-blue-500">

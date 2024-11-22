@@ -13,7 +13,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
     <div className="container min:h-screen flex justify-center items-center mx-auto">
       <div className="flex flex-col w-full items-center py-24">
         <Link href="/" className="text-4xl font-bold text-themeTextWhite">
-          EduVarse.
+          EduVerse.
         </Link>
         <BackdropGradient
           containerClass="flex flex-col items-center"

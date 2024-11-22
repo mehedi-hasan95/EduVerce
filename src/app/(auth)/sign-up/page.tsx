@@ -3,6 +3,7 @@
 import { onCreateAccount } from "@/actions/auth";
 import { FormGenerator } from "@/components/common/forms/form-generator";
 import { REGISTER_FORM } from "@/components/common/forms/form-list";
+import { GoogleAuthButton } from "@/components/common/google-auth-button";
 import { LoadingButton } from "@/components/common/loading-button";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -10,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { RegisterSchema } from "@/schemas/auth.schema";
 import { useSignUp } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronRight, Menu } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -204,8 +205,7 @@ const SignUp = () => {
         </div>
         <Separator orientation="horizontal" className="bg-themeGray" />
       </div>
-      <Menu className="h-6 w-6" />
-      {/* to do  */}
+      <GoogleAuthButton method="SignUp" />
       <p className="flex justify-end gap-2">
         Already have an account?{" "}
         <Link href="/sign-in" className="text-blue-500">

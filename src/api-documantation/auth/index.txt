@@ -11,3 +11,19 @@ data: {
 
 ### User Details 
 ## Api: "onGetUserDetails". It doesn't depend anyting
+
+### After sussfully login
+## API: "onSigninUser". It doesn't depend anyting.
+This will provide you status 200, 207, and 400. If status === 207 then group is greter then 0. It will return you 
+return {
+    status: 207,
+    groupId: user?.group[0].id,
+    channelId: user?.group[0].channel[0].id,
+    userId: user?.id,
+  };
+If status === 200 then user is created but no group created. It returns 
+return {
+  status: 200,
+  userId: user.id,
+};
+If status === 400 then something went wrong

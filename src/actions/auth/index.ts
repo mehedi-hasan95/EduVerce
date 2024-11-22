@@ -66,3 +66,46 @@ export const onGetUserDetails = async () => {
     return { status: 400 };
   }
 };
+
+export const onSigninUser = async (clerkId: string) => {
+  try {
+    const user = await db.user.findUnique({
+      where: { clerkId },
+      select: {
+        id: true,
+        group: {
+          select: {
+            id: true,
+            channel: {
+              select: {
+                id: true,
+              },
+              take: 1,
+              orderBy: { createdAt: "asc" },
+            },
+          },
+        },
+      },
+    });
+    {
+      if (user) {
+        if (user?.group.length > 0) {
+          return {
+            status: 207,
+            groupId: user?.group[0].id,
+            channelId: user?.group[0].channel[0].id,
+            userId: user?.id,
+          };
+        }
+        return {
+          status: 200,
+          userId: user.id,
+        };
+      }
+    }
+    return { status: 400, message: "Opps! Something went wrong" };
+  } catch (error) {
+    console.error(error);
+    return { status: 400, message: "Opps! Something went wrong" };
+  }
+};
