@@ -1,6 +1,18 @@
-export default function CallbackLoading() {
-  return (
-    <div className="h-screen w-full flex justify-center items-center">
+import { cn } from "@/lib/utils";
+
+type LoaderProps = {
+  loading: boolean;
+  children: React.ReactNode;
+  className?: string;
+};
+
+export default function ElementLoader({
+  loading,
+  children,
+  className,
+}: LoaderProps) {
+  return loading ? (
+    <div className={cn("w-full flex justify-center items-center", className)}>
       <div className="w-16">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
           <radialGradient
@@ -54,5 +66,7 @@ export default function CallbackLoading() {
         </svg>
       </div>
     </div>
+  ) : (
+    { children }
   );
 }

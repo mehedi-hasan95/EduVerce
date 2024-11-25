@@ -52,3 +52,67 @@ export const LANDING_MENUS: LandingMenus[] = [
     icon: LayoutDashboard,
   },
 ];
+
+type Category = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  path: string;
+};
+
+export const CATEGORY_MENUS: Category[] = [
+  {
+    id: "1",
+    label: "Next.Js",
+    icon: Home,
+    path: "next.js",
+  },
+  {
+    id: "2",
+    label: "React",
+    icon: Home,
+    path: "react",
+  },
+  {
+    id: "3",
+    label: "Tailwind",
+    icon: Home,
+    path: "tailwind",
+  },
+  {
+    id: "4",
+    label: "Javascript",
+    icon: Home,
+    path: "javascript",
+  },
+  {
+    id: "5",
+    label: "Typescript",
+    icon: Home,
+    path: "typescript",
+  },
+  {
+    id: "6",
+    label: "WordPress",
+    icon: Home,
+    path: "wordpress",
+  },
+  {
+    id: "7",
+    label: "HTML",
+    icon: Home,
+    path: "html",
+  },
+  {
+    id: "8",
+    label: "CSS",
+    icon: Home,
+    path: "css",
+  },
+  {
+    id: "9",
+    label: "Laravel",
+    icon: Home,
+    path: "laravel",
+  },
+];
