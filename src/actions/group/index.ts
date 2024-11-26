@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { CreateGroupSchema } from "@/schemas/schemas";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
+import { onGetUserDetails } from "../auth";
 
 export const onGetAffiliateInfo = async (id: string) => {
   try {
@@ -95,5 +96,129 @@ export const onCreateNewGroup = async (
     return { status: 400, message: "Opps!, Something went wrong" };
   } catch (error) {
     return { status: 400, message: "Something went wrong" };
+  }
+};
+
+export const onGetGroupInfo = async (id: string) => {
+  try {
+    const user = await onGetUserDetails();
+    const groupInfo = await db.group.findUnique({ where: { id } });
+    if (groupInfo) {
+      return {
+        status: 200,
+        groupInfo,
+        groupOwner: user?.id === groupInfo.userId ? true : false,
+      };
+    }
+    return { status: 404 };
+  } catch (error) {
+    return { status: 400 };
+  }
+};
+
+export const onGetUserGroups = async (userId: string) => {
+  try {
+    const group = await db.user.findUnique({
+      where: { id: userId },
+      select: {
+        group: {
+          select: {
+            id: true,
+            icon: true,
+            name: true,
+            channel: {
+              where: {
+                name: "general",
+              },
+              select: { id: true },
+            },
+          },
+        },
+        membership: {
+          select: {
+            Group: {
+              select: {
+                id: true,
+                icon: true,
+                name: true,
+                channel: {
+                  where: {
+                    name: "general",
+                  },
+                  select: { id: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    if (group && (group.group.length > 0 || group.membership.length > 0)) {
+      return { status: 200, groupInfo: group };
+    }
+    return { status: 404 };
+  } catch (error) {
+    return { status: 400 };
+  }
+};
+
+export const onGetGroupChannels = async (groupId: string) => {
+  try {
+    const channels = await db.channel.findMany({
+      where: { groupId },
+      orderBy: { createdAt: "asc" },
+    });
+
+    return { status: 200, channels };
+  } catch (error) {
+    return { status: 400 };
+  }
+};
+
+export const onGetGroupSubscriptions = async (groupId: string) => {
+  try {
+    const subscriptions = await db.subscription.findMany({
+      where: {
+        groupId: groupId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const sbuscriberCount = await db.members.count({
+      where: {
+        groupId: groupId,
+      },
+    });
+
+    if (subscriptions) {
+      return { status: 200, subscriptions, sbuscriberCount };
+    }
+  } catch (error) {
+    return { status: 400 };
+  }
+};
+
+export const onGetAllGroupMembers = async (groupId: string) => {
+  try {
+    const user = await onGetUserDetails();
+    const members = await db.members.findMany({
+      where: {
+        groupId,
+        NOT: {
+          userId: user?.id,
+        },
+      },
+      include: {
+        User: true,
+      },
+    });
+
+    if (members && members.length > 0) {
+      return { status: 200, members };
+    }
+  } catch (error) {
+    return { status: 400, message: "Oops something went wrong" };
   }
 };
