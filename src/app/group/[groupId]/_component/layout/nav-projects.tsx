@@ -4,8 +4,10 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useSidebarHooks } from "@/hooks/navigation";
 import Link from "next/link";
@@ -15,8 +17,19 @@ import { usePathname } from "next/navigation";
 import { PlusCircle } from "lucide-react";
 import { ChannelCreateModal } from "./channel-create-modal";
 
+import { Folder, Forward, MoreHorizontal, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useChannelHooks } from "@/hooks/channel";
 export function NavProjects({ groupId }: { groupId: string }) {
+  const { isMobile } = useSidebar();
   const { groupChannels } = useSidebarHooks(groupId);
+  const { onDeleteChannel } = useChannelHooks(groupId);
   const pathName = usePathname();
   const currentPage = pathName.split("/").pop();
   return (
@@ -56,6 +69,39 @@ export function NavProjects({ groupId }: { groupId: string }) {
                   <span className="capitalize">{channel.name}</span>
                 </Link>
               </SidebarMenuButton>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuAction showOnHover>
+                    <MoreHorizontal />
+                    <span className="sr-only">More</span>
+                  </SidebarMenuAction>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-48 rounded-lg"
+                  side={isMobile ? "bottom" : "right"}
+                  align={isMobile ? "end" : "start"}
+                >
+                  <DropdownMenuItem>
+                    <Folder className="text-muted-foreground" />
+                    <span>View Project</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Forward className="text-muted-foreground" />
+                    <span>Share Project</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {channel.name !== "general" &&
+                    channel.name !== "anouncements" && (
+                      <DropdownMenuItem
+                        onClick={() => onDeleteChannel(groupId, channel.id)}
+                        className="cursor-pointer"
+                      >
+                        <Trash2 className="text-muted-foreground" />
+                        <span>Delete Project</span>
+                      </DropdownMenuItem>
+                    )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
           ))}
       </SidebarMenu>

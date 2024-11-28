@@ -82,3 +82,32 @@ export const onCreateNewChannel = async (
     return { status: 500, message: "Something went wrong" };
   }
 };
+
+export const onChannelDelete = async (groupId: string, channelId: string) => {
+  try {
+    const user = await onGetUserDetails();
+    if (!user) {
+      return { status: 403, message: "Unauthorize user" };
+    }
+    const group = await db.group.findUnique({
+      where: {
+        id_userId: {
+          id: groupId,
+          userId: user.id!,
+        },
+      },
+    });
+    if (group) {
+      const channel = await db.channel.delete({
+        where: { id: channelId },
+      });
+      if (channel) {
+        return { status: 200, message: "Chanel deleted" };
+      }
+      return { status: 401, message: "Opps! Something went wrong" };
+    }
+    return { status: 400, message: "Opps! Something went wrong" };
+  } catch (error) {
+    return { status: 500, message: "Something went wrong" };
+  }
+};
