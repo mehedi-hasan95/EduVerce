@@ -62,6 +62,8 @@ model Group {
   affiliate       Affiliate?
   domain          String?
   subscription    Subscription[]
+
+  @@unique([id, userId])
 }
 
 model Members {

@@ -60,12 +60,12 @@ export const onCreateNewGroup = async (
                 {
                   id: uuidv4(),
                   name: "general",
-                  icon: "https://utfs.io/f/bfQmhClAQk0h9J7v64yLGOuRz16ynMgUjxYKZTCDftecrIa4",
+                  icon: "https://utfs.io/f/bfQmhClAQk0hGZ4mY7gkC7qKALH1Uw83RI6Q4zXbg5iydsto",
                 },
                 {
                   id: uuidv4(),
                   name: "anouncements",
-                  icon: "https://utfs.io/f/bfQmhClAQk0hbY4NQjFlAQk0hm3gMq1zEtlJP9uHiIWcZjaV",
+                  icon: "https://utfs.io/f/bfQmhClAQk0hj2TUaXWiQY8RdKsIGkxqhpPbnHfUyNoZmS7l",
                 },
               ],
             },
@@ -82,6 +82,9 @@ export const onCreateNewGroup = async (
               take: 1,
               orderBy: { createdAt: "asc" },
             },
+          },
+          orderBy: {
+            createdAt: "desc",
           },
         },
       },
@@ -118,19 +121,23 @@ export const onGetGroupInfo = async (id: string) => {
 
 export const onGetUserGroups = async (userId: string) => {
   try {
-    const group = await db.user.findUnique({
-      where: { id: userId },
+    const groups = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
       select: {
         group: {
           select: {
             id: true,
-            icon: true,
             name: true,
+            icon: true,
             channel: {
               where: {
                 name: "general",
               },
-              select: { id: true },
+              select: {
+                id: true,
+              },
             },
           },
         },
@@ -145,7 +152,9 @@ export const onGetUserGroups = async (userId: string) => {
                   where: {
                     name: "general",
                   },
-                  select: { id: true },
+                  select: {
+                    id: true,
+                  },
                 },
               },
             },
@@ -153,10 +162,18 @@ export const onGetUserGroups = async (userId: string) => {
         },
       },
     });
-    if (group && (group.group.length > 0 || group.membership.length > 0)) {
-      return { status: 200, groupInfo: group };
+
+    if (groups && (groups.group.length > 0 || groups.membership.length > 0)) {
+      return {
+        status: 200,
+        groups: groups.group,
+        members: groups.membership,
+      };
     }
-    return { status: 404 };
+
+    return {
+      status: 404,
+    };
   } catch (error) {
     return { status: 400 };
   }

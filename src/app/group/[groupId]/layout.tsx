@@ -1,6 +1,5 @@
 import { onGetUserDetails } from "@/actions/auth";
 import {
-  onGetAllGroupMembers,
   onGetGroupChannels,
   onGetGroupInfo,
   onGetGroupSubscriptions,
@@ -47,14 +46,15 @@ const GroupIdLayout = async ({ children, params }: Props) => {
     queryKey: ["group-subscriptions"],
     queryFn: () => onGetGroupSubscriptions(groupId),
   });
-  await query.prefetchQuery({
-    queryKey: ["group-members"],
-    queryFn: () => onGetAllGroupMembers(groupId),
-  });
+  // await query.prefetchQuery({
+  //   queryKey: ["group-members"],
+  //   queryFn: () => onGetAllGroupMembers(groupId),
+  // });
+
   return (
     <HydrationBoundary state={dehydrate(query)}>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar groupId={groupId} />
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
             <div className="flex items-center gap-2 px-4">

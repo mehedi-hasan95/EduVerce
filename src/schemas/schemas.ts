@@ -8,3 +8,10 @@ export const CreateGroupSchema = z.object({
     message: "Category name is required.",
   }),
 });
+
+export const CreateChannelSchema = z.object({
+  name: z.string().min(2, {
+    message: "Category name is required.",
+  }),
+  icon: z.string(),
+});
