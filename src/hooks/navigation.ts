@@ -1,5 +1,5 @@
 import { onGetGroupChannels } from "@/actions/group";
-import { IUserGroups } from "@/app/group/[groupId]/_component/type";
+import { IGroupInfo, IUserGroups } from "@/app/group/[groupId]/_component/type";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -23,5 +23,9 @@ export const useSidebarHooks = (groupId: string) => {
     queryFn: () => onGetGroupChannels(groupId),
   });
 
-  return { group, groupChannels };
+  const { data: groupInfo } = useQuery({
+    queryKey: ["group-info"],
+  }) as { data: IGroupInfo };
+
+  return { group, groupChannels, groupInfo };
 };

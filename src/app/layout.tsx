@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/common/theme-provider";
 import { cn } from "@/lib/utils";
 import { ReactQueryProvider } from "@/provider/react-query-provider";
+import { ReduxProvider } from "@/redux/redux-provider";
 
 // const openSans = Open_Sans({
 //   weight: "400",
@@ -33,10 +34,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <ReactQueryProvider>
-              {children}
-              <Toaster />
-            </ReactQueryProvider>
+            <ReduxProvider>
+              <ReactQueryProvider>
+                {children}
+                <Toaster />
+              </ReactQueryProvider>
+            </ReduxProvider>
           </ThemeProvider>
         </body>
       </html>

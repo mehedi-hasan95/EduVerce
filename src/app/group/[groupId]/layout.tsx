@@ -18,6 +18,7 @@ import {
 import { redirect } from "next/navigation";
 import { AppSidebar } from "./_component/layout/app-sidebar";
 import { Separator } from "@/components/ui/separator";
+import { Search } from "@/components/common/search";
 
 type Props = {
   children: React.ReactNode;
@@ -56,10 +57,15 @@ const GroupIdLayout = async ({ children, params }: Props) => {
       <SidebarProvider>
         <AppSidebar groupId={groupId} />
         <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 max-w-screen-2xl pr-4">
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
             </div>
+            <Search
+              searchType="GROUPS"
+              className="rounded-full border-themeGray bg-black !opacity-100 px-3"
+              placeholder="Search..."
+            />
           </header>
           <Separator orientation="horizontal" className="-mt-2 mb-3" />
           <div className="px-6">{children}</div>

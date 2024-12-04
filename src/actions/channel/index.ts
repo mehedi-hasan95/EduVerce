@@ -3,8 +3,6 @@
 
 import db from "@/lib/db";
 import { onGetUserDetails } from "../auth";
-import { z } from "zod";
-import { CreateChannelSchema } from "@/schemas/schemas";
 
 export const onGetChannelInfo = async (id: string) => {
   try {
