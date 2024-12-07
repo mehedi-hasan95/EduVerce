@@ -1,15 +1,25 @@
-import { onSearchGroups } from "@/actions/group";
-import { onClearSearch, onSearch } from "@/redux/slice/search-slice";
-import { AppDispatch } from "@/redux/store";
-import { useQuery } from "@tanstack/react-query";
+import { onGetGroupInfo, onSearchGroups } from "@/actions/group";
+import { useSearchStore } from "@/zustand/search-slice";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-
+import { JSONContent } from "novel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { GroupSettingsSchema } from "@/schemas/schemas";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 export const useSearch = (search: "GROUPS" | "POSTS") => {
-  const [query, setQuery] = useState<string>("");
-  const [debounce, setDebounce] = useState<string>("");
+  const {
+    setIsSearching,
+    setData,
+    setStatus,
+    setDebounce,
+    clearSearch,
+    debounce,
+  } = useSearchStore();
 
-  const dispatch: AppDispatch = useDispatch();
+  const [query, setQuery] = useState<string>("");
 
   const onSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) =>
     setQuery(e.target.value);
@@ -19,7 +29,7 @@ export const useSearch = (search: "GROUPS" | "POSTS") => {
       setDebounce(query);
     }, 1000);
     return () => clearTimeout(delayInputTimeoutId);
-  }, [query, 1000]);
+  }, [query, setDebounce]);
 
   const { refetch, data, isFetched, isFetching } = useQuery({
     queryKey: ["search-data", debounce],
@@ -28,36 +38,31 @@ export const useSearch = (search: "GROUPS" | "POSTS") => {
         const groups = await onSearchGroups(search, queryKey[1]);
         return groups;
       }
+      if (search === "POSTS") {
+        const posts = await onSearchGroups(search, queryKey[1]);
+        return posts;
+      }
     },
     enabled: false,
   });
 
-  if (isFetching)
-    dispatch(
-      onSearch({
-        isSearching: true,
-        data: [],
-      })
-    );
+  useEffect(() => {
+    if (isFetching) {
+      setIsSearching(true);
+      setData([]);
+    }
 
-  if (isFetched)
-    dispatch(
-      onSearch({
-        isSearching: false,
-        status: data?.status as number,
-        data: data?.groups || [],
-        debounce,
-      })
-    );
+    if (isFetched) {
+      setIsSearching(false);
+      setStatus(data?.status);
+      setData(data?.groups || []);
+    }
+  }, [isFetching, isFetched, data, setIsSearching, setStatus, setData]);
 
   useEffect(() => {
     if (debounce) refetch();
-    if (!debounce) dispatch(onClearSearch());
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      debounce;
-    };
-  }, [debounce]);
+    else clearSearch();
+  }, [debounce, refetch, clearSearch]);
 
   return { query, onSearchQuery };
 };

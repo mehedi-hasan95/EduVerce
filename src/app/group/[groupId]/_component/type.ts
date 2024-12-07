@@ -17,6 +17,7 @@ export interface IGroupInfo {
         icon: string;
       }
     | undefined;
+  groupOwner: boolean;
 }
 
 export interface IChannels {

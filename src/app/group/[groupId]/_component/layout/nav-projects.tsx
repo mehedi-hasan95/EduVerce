@@ -26,27 +26,76 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useChannelHooks } from "@/hooks/channel";
+import { SIDEBAR_SETTINGS_MENU } from "@/constants/menus";
 export function NavProjects({ groupId }: { groupId: string }) {
   const { isMobile } = useSidebar();
-  const { groupChannels } = useSidebarHooks(groupId);
+  const { groupChannels, groupInfo } = useSidebarHooks(groupId);
+
   const { onDeleteChannel } = useChannelHooks(groupId);
   const pathName = usePathname();
   const currentPage = pathName.split("/").pop();
+  if (currentPage?.includes("settings")) {
+    return (
+      <SidebarGroup>
+        <SidebarGroupLabel>Channels</SidebarGroupLabel>
+        <SidebarMenu className="space-y-2">
+          {SIDEBAR_SETTINGS_MENU.map((item) =>
+            item.integration ? (
+              groupInfo.groupOwner && (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      href={`/group/${groupId}/settings/${item.path}`}
+                      className={cn(
+                        "bg-themeDarkGray",
+                        currentPage === item.id &&
+                          "bg-[#09090B] border-[#27272A"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span className="capitalize">{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )
+            ) : (
+              <SidebarMenuItem key={item.id}>
+                <SidebarMenuButton asChild>
+                  <Link
+                    href={`/group/${groupId}/settings/${item.path}`}
+                    className={cn(
+                      "bg-themeDarkGray",
+                      currentPage === item.id && "bg-[#09090B] border-[#27272A"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    <span className="capitalize">{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )
+          )}
+        </SidebarMenu>
+      </SidebarGroup>
+    );
+  }
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Channels</SidebarGroupLabel>
       <SidebarMenu className="space-y-2">
-        <SidebarMenuItem>
-          {" "}
-          <ChannelCreateModal
-            groupId={groupId}
-            buttonTrigger={
-              <SidebarMenuButton>
-                <PlusCircle className="h-4 w-4" /> Add Channel
-              </SidebarMenuButton>
-            }
-          />
-        </SidebarMenuItem>
+        {groupInfo.groupOwner && (
+          <SidebarMenuItem>
+            {" "}
+            <ChannelCreateModal
+              groupId={groupId}
+              buttonTrigger={
+                <SidebarMenuButton>
+                  <PlusCircle className="h-4 w-4" /> Add Channel
+                </SidebarMenuButton>
+              }
+            />
+          </SidebarMenuItem>
+        )}
         {groupChannels &&
           groupChannels.status === 200 &&
           groupChannels.channels?.map((channel) => (
@@ -69,39 +118,41 @@ export function NavProjects({ groupId }: { groupId: string }) {
                   <span className="capitalize">{channel.name}</span>
                 </Link>
               </SidebarMenuButton>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuAction showOnHover>
-                    <MoreHorizontal />
-                    <span className="sr-only">More</span>
-                  </SidebarMenuAction>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-48 rounded-lg"
-                  side={isMobile ? "bottom" : "right"}
-                  align={isMobile ? "end" : "start"}
-                >
-                  <DropdownMenuItem>
-                    <Folder className="text-muted-foreground" />
-                    <span>View Project</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Forward className="text-muted-foreground" />
-                    <span>Share Project</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  {channel.name !== "general" &&
-                    channel.name !== "anouncements" && (
-                      <DropdownMenuItem
-                        onClick={() => onDeleteChannel(groupId, channel.id)}
-                        className="cursor-pointer"
-                      >
-                        <Trash2 className="text-muted-foreground" />
-                        <span>Delete Project</span>
-                      </DropdownMenuItem>
-                    )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {groupInfo.groupOwner && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuAction showOnHover>
+                      <MoreHorizontal />
+                      <span className="sr-only">More</span>
+                    </SidebarMenuAction>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-48 rounded-lg"
+                    side={isMobile ? "bottom" : "right"}
+                    align={isMobile ? "end" : "start"}
+                  >
+                    <DropdownMenuItem>
+                      <Folder className="text-muted-foreground" />
+                      <span>View Project</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Forward className="text-muted-foreground" />
+                      <span>Share Project</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {channel.name !== "general" &&
+                      channel.name !== "anouncements" && (
+                        <DropdownMenuItem
+                          onClick={() => onDeleteChannel(groupId, channel.id)}
+                          className="cursor-pointer"
+                        >
+                          <Trash2 className="text-muted-foreground" />
+                          <span>Delete Project</span>
+                        </DropdownMenuItem>
+                      )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </SidebarMenuItem>
           ))}
       </SidebarMenu>

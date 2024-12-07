@@ -95,7 +95,6 @@ const SignUp = () => {
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code,
       });
-      console.log(signUpAttempt);
       if (signUpAttempt.status !== "complete") {
         return toast("Error", {
           description: "Oops! something went wrong",

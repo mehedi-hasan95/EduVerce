@@ -2,10 +2,11 @@
 "use server";
 
 import db from "@/lib/db";
-import { CreateGroupSchema } from "@/schemas/schemas";
+import { CreateGroupSchema, GroupSettingsSchema } from "@/schemas/schemas";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { onGetUserDetails } from "../auth";
+import { revalidatePath } from "next/cache";
 
 export const onGetAffiliateInfo = async (id: string) => {
   try {
@@ -265,8 +266,60 @@ export const onSearchGroups = async (
       }
     }
     if (mode === "POSTS") {
+      const fetchedPosts = await db.post.findMany({
+        where: {
+          title: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+        take: 6,
+        skip: paginate || 0,
+      });
+      if (fetchedPosts) {
+        if (fetchedPosts.length > 0) {
+          return { status: 200, posts: fetchedPosts };
+        }
+        return { status: 404 };
+      }
     }
   } catch (error) {
     return { status: 400, message: "Opps! something went wrong" };
+  }
+};
+
+export const onUpdateGroupSettings = async (
+  groupid: string,
+  values: z.infer<typeof GroupSettingsSchema>,
+  path: string
+) => {
+  try {
+    const user = await onGetUserDetails();
+    if (!user) {
+      return { status: 401, message: "Unauthorize user" };
+    }
+    const updateGroup = await db.group.update({
+      where: {
+        id_userId: {
+          id: groupid,
+          userId: user.id!,
+        },
+      },
+      data: {
+        description: values.description,
+        htmlDescription: values.htmldescription,
+        icon: values.icon,
+        jsonDescription: values.jsondescription,
+        name: values.name,
+        thumbnail: values.thumbnail,
+      },
+    });
+    if (updateGroup) {
+      return { status: 200, message: "Group update" };
+    }
+    revalidatePath(path);
+    return { status: 404, message: "Something went wrong" };
+  } catch (error) {
+    return { status: 500, message: "Internal server error" };
   }
 };

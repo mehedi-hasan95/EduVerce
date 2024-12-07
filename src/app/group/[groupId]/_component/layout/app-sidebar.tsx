@@ -19,7 +19,7 @@ export function AppSidebar({ groupId }: { groupId: string }) {
         <NavProjects groupId={groupId} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <NavUser groupId={groupId} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

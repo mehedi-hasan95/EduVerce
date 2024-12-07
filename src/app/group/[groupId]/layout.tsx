@@ -62,7 +62,7 @@ const GroupIdLayout = async ({ children, params }: Props) => {
               <SidebarTrigger className="-ml-1" />
             </div>
             <Search
-              searchType="GROUPS"
+              searchType="POSTS"
               className="rounded-full border-themeGray bg-black !opacity-100 px-3"
               placeholder="Search..."
             />

@@ -2,10 +2,14 @@ import {
   Compass,
   CreditCard,
   Home,
+  HomeIcon,
+  Info,
   LayoutDashboard,
   LucideIcon,
   Orbit,
+  Zap,
 } from "lucide-react";
+import { BsFillPeopleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
 import {
   RiHtml5Fill,
@@ -126,5 +130,46 @@ export const CATEGORY_MENUS: Category[] = [
     label: "Laravel",
     icon: FaLaravel,
     path: "laravel",
+  },
+];
+
+type MenuBar = {
+  id: string;
+  label: string;
+  icon: LucideIcon | IconType;
+  path: string;
+  integration?: boolean;
+};
+export const SIDEBAR_SETTINGS_MENU: MenuBar[] = [
+  {
+    id: "1",
+    label: "General",
+    icon: HomeIcon,
+    path: "",
+  },
+  {
+    id: "2",
+    label: "Subscriptions",
+    icon: CreditCard,
+    path: "subscriptions",
+  },
+  {
+    id: "3",
+    label: "Affiliates",
+    icon: BsFillPeopleFill,
+    path: "affiliates",
+  },
+  {
+    id: "4",
+    label: "Domain Config",
+    icon: Info,
+    path: "domains",
+  },
+  {
+    id: "5",
+    label: "Integration",
+    icon: Zap,
+    path: "integrations",
+    integration: true,
   },
 ];

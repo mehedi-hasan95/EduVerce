@@ -41,7 +41,7 @@ export function TeamSwitcher({ groupId }: { groupId: string }) {
                   src={
                     activeGroup?.icon
                       ? activeGroup.icon
-                      : "https://utfs.io/f/bfQmhClAQk0h9J7v64yLGOuRz16ynMgUjxYKZTCDftecrIa4"
+                      : "https://utfs.io/f/bfQmhClAQk0hGZ4mY7gkC7qKALH1Uw83RI6Q4zXbg5iydsto"
                   }
                   alt=""
                   height={20}

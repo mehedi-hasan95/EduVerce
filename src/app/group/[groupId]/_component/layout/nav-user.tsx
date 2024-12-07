@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  BadgeCheck,
   Bell,
   ChevronsUpDown,
   CreditCard,
@@ -26,8 +25,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { SignOutButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { BsGear } from "react-icons/bs";
 
-export function NavUser() {
+export function NavUser({ groupId }: { groupId: string }) {
   const { isMobile } = useSidebar();
   const { user: loginUser } = useUser();
 
@@ -81,17 +82,21 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
+              <Link href="/group/create">
+                <DropdownMenuItem className="cursor-pointer">
+                  <Sparkles />
+                  Create Group
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
+              <Link href={`/group/${groupId}/settings`}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <BsGear />
+                  Settings
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 <CreditCard />
                 Billing
