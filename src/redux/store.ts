@@ -2,9 +2,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import searchReducer from "./slice/search-slice";
+import infiniteScrollReducer from "./slice/infinite-scroll-slice";
 
 const rootReducer = combineReducers({
   //add all your reducers here
+  infiniteScrollReducer,
   searchReducer,
 });
 

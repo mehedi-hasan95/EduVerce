@@ -120,7 +120,7 @@ export const useSearch = (search: "GROUPS" | "POSTS") => {
     return () => {
       debounce;
     };
-  }, [debounce]);
+  }, [debounce, dispatch, refetch]);
 
   return { query, onSearchQuery };
 };
