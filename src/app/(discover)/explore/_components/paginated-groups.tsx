@@ -1,9 +1,8 @@
-import { useAppSelector } from "@/redux/store";
+import { useInfiniteScrollStore } from "@/zustand/infinity-scroll-store";
 import { GroupCard } from "./group-card";
 
 const PaginatedGroups = () => {
-  // wp: redux
-  const { data } = useAppSelector((state) => state.infiniteScrollReducer);
+  const { data } = useInfiniteScrollStore();
 
   return data.map((item: any) => <GroupCard item={item} key={item.id} />);
 };

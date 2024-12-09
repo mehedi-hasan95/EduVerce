@@ -24,19 +24,19 @@ export default function ElementLoader({
             gradientTransform="scale(1.5)"
           >
             <stop offset="0" stopColor="#F4C543"></stop>
-            <stop offset=".3" stopColor="#F4C543" stop-opacity=".9"></stop>
-            <stop offset=".6" stopColor="#F4C543" stop-opacity=".6"></stop>
-            <stop offset=".8" stopColor="#F4C543" stop-opacity=".3"></stop>
-            <stop offset="1" stopColor="#F4C543" stop-opacity="0"></stop>
+            <stop offset=".3" stopColor="#F4C543" stopOpacity=".9"></stop>
+            <stop offset=".6" stopColor="#F4C543" stopOpacity=".6"></stop>
+            <stop offset=".8" stopColor="#F4C543" stopOpacity=".3"></stop>
+            <stop offset="1" stopColor="#F4C543" stopOpacity="0"></stop>
           </radialGradient>
           <circle
-            transform-origin="center"
+            transformOrigin="center"
             fill="none"
             stroke="url(#a8)"
-            stroke-width="8"
-            stroke-linecap="round"
-            stroke-dasharray="200 1000"
-            stroke-dashoffset="0"
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeDasharray="200 1000"
+            strokeDashoffset="0"
             cx="100"
             cy="100"
             r="70"
@@ -53,12 +53,12 @@ export default function ElementLoader({
             ></animateTransform>
           </circle>
           <circle
-            transform-origin="center"
+            transformOrigin="center"
             fill="none"
             opacity=".2"
             stroke="#F4C543"
-            stroke-width="8"
-            stroke-linecap="round"
+            strokeWidth="8"
+            strokeLinecap="round"
             cx="100"
             cy="100"
             r="70"

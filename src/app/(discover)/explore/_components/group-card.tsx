@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { truncateString } from "@/lib/utils";
-import { GroupStateProps } from "@/redux/slice/search-slice";
+import { GroupStateProps } from "@/zustand/search-slice";
 import Image from "next/image";
 import Link from "next/link";
 

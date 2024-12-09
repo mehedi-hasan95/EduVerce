@@ -1,5 +1,5 @@
 "use client";
-import { useAppSelector } from "@/redux/store";
+import { useSearchStore } from "@/zustand/search-slice";
 import { SearchedGroup } from "./searched-group";
 
 type Props = {
@@ -7,11 +7,7 @@ type Props = {
   category?: string;
 };
 export const ExploreContent = ({ layout, category }: Props) => {
-  // wp: Use redux. convert this into zustand
-  const { isSearching, data, status, debounce } = useAppSelector(
-    (state) => state.searchReducer
-  );
-  console.log(status, data);
+  const { isSearching, data, status, debounce } = useSearchStore();
   return (
     <div>
       {isSearching || debounce ? (

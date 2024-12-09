@@ -1,11 +1,8 @@
 import { onGetPaginatedPosts, onSearchGroups } from "@/actions/group";
-import { onInfiniteScroll } from "@/redux/slice/infinite-scroll-slice";
-import { AppDispatch, useAppSelector } from "@/redux/store";
+import { useInfiniteScrollStore } from "@/zustand/infinity-scroll-store";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
 
-// wp:redux
 export const useInfiniteScroll = (
   action: "GROUPS" | "CHANNEL" | "POSTS",
   identifier: string,
@@ -14,15 +11,22 @@ export const useInfiniteScroll = (
   query?: string
 ) => {
   const observerElement = useRef<HTMLDivElement>(null);
-  const dispatch: AppDispatch = useDispatch();
-  const { data } = useAppSelector((state) => state.infiniteScrollReducer);
+  const { data, onInfiniteScroll } = useInfiniteScrollStore();
+
   const {
     refetch,
     isFetching,
     isFetched,
     data: paginatedData,
   } = useQuery({
-    queryKey: ["infinite-scroll"],
+    queryKey: [
+      "infinite-scroll",
+      action,
+      identifier,
+      paginate + data.length,
+      search,
+      query,
+    ],
     queryFn: async () => {
       if (search) {
         if (action === "GROUPS") {
@@ -51,15 +55,21 @@ export const useInfiniteScroll = (
     enabled: false,
   });
 
-  if (isFetched && paginatedData)
-    dispatch(onInfiniteScroll({ data: paginatedData }));
+  useEffect(() => {
+    if (isFetched && paginatedData) {
+      onInfiniteScroll(paginatedData);
+    }
+  }, [isFetched, paginatedData, onInfiniteScroll]);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) refetch();
     });
-    observer.observe(observerElement.current as Element);
+    if (observerElement.current) {
+      observer.observe(observerElement.current);
+    }
     return () => observer.disconnect();
-  }, []);
+  }, [refetch]);
+
   return { observerElement, isFetching };
 };
