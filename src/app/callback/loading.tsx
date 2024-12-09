@@ -11,11 +11,11 @@ export default function CallbackLoading() {
             fy=".3125"
             gradientTransform="scale(1.5)"
           >
-            <stop offset="0" stop-color="#F4C543"></stop>
-            <stop offset=".3" stop-color="#F4C543" stop-opacity=".9"></stop>
-            <stop offset=".6" stop-color="#F4C543" stop-opacity=".6"></stop>
-            <stop offset=".8" stop-color="#F4C543" stop-opacity=".3"></stop>
-            <stop offset="1" stop-color="#F4C543" stop-opacity="0"></stop>
+            <stop offset="0" stopColor="#F4C543"></stop>
+            <stop offset=".3" stopColor="#F4C543" stop-opacity=".9"></stop>
+            <stop offset=".6" stopColor="#F4C543" stop-opacity=".6"></stop>
+            <stop offset=".8" stopColor="#F4C543" stop-opacity=".3"></stop>
+            <stop offset="1" stopColor="#F4C543" stop-opacity="0"></stop>
           </radialGradient>
           <circle
             transform-origin="center"

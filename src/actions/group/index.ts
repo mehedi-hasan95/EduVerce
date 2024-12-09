@@ -323,3 +323,33 @@ export const onUpdateGroupSettings = async (
     return { status: 500, message: "Internal server error" };
   }
 };
+
+export const onGetExploreGroup = async (category: string, paginate: number) => {
+  try {
+    const groups = await db.group.findMany({
+      where: {
+        category,
+        NOT: {
+          description: null,
+          thumbnail: null,
+        },
+      },
+      take: 6,
+      skip: paginate,
+    });
+
+    if (groups && groups.length > 0) {
+      return { status: 200, groups };
+    }
+
+    return {
+      status: 404,
+      message: "No groups found for this category",
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      message: "Oops! something went wrong",
+    };
+  }
+};

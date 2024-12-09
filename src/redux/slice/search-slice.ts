@@ -35,7 +35,6 @@ export const Search = createSlice({
     onSearch: (state, action: PayloadAction<InitialStateProps>) => {
       return { ...action.payload };
     },
-
     onClearSearch: (state) => {
       state.data = [];
       state.isSearching = false;
