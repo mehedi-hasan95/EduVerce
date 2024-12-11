@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
-import { truncateString } from "@/lib/utils";
+import { Card, CardHeader } from "@/components/ui/card";
+import { descLength } from "@/lib/utils";
 import { GroupStateProps } from "@/zustand/search-slice";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,17 +12,19 @@ export const GroupCard = ({ item }: Props) => {
   return (
     <Link href={`/about/${item.id}`} key={item.id}>
       <Card className="bg-themeBlack border-themeGray rounded-xl overflow-hidden">
-        <Image
-          src={item.thumbnail ? item.thumbnail : "/no-image.svg"}
-          alt=""
-          height={300}
-          width={300}
-          className="w-full opacity-70 h-56"
-        />
+        <CardHeader>
+          <Image
+            src={item.thumbnail ? item.thumbnail : "/no-preview.jpg"}
+            alt=""
+            height={300}
+            width={300}
+            className="w-full opacity-70 h-56"
+          />
+        </CardHeader>
         <div className="p-6">
           <h3 className="text-lg text-themeTextGray font-bold">{item.name}</h3>
           <p className="text-base text-themeTextGray">
-            {item.description && truncateString(item.description)}
+            {item.description && descLength(item.description, 200)}
           </p>
         </div>
       </Card>

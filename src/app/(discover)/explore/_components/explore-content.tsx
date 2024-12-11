@@ -1,6 +1,7 @@
 "use client";
 import { useSearchStore } from "@/zustand/search-slice";
 import { SearchedGroup } from "./searched-group";
+import { InfinityGroups } from "./infinity-groups";
 
 type Props = {
   layout: "SLIDER" | "LIST";
@@ -17,7 +18,7 @@ export const ExploreContent = ({ layout, category }: Props) => {
           query={debounce}
         />
       ) : (
-        <>Nothing</>
+        <InfinityGroups />
       )}
     </div>
   );

@@ -7,6 +7,7 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { onGetUserDetails } from "../auth";
 import { revalidatePath } from "next/cache";
+import { NextRequest } from "next/server";
 
 export const onGetAffiliateInfo = async (id: string) => {
   try {
@@ -407,3 +408,30 @@ export const onGetPaginatedPosts = async (
     return { status: 400 };
   }
 };
+
+export async function onGetAllGroup(page: number, limit: number) {
+  try {
+    const skip = (page - 1) * limit;
+
+    const groups = await db.group.findMany({
+      take: limit,
+      skip: skip,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const total = await db.group.count();
+
+    if (groups && groups.length > 0) {
+      return {
+        status: 200,
+        groups,
+        hasMore: skip + groups.length < total,
+      };
+    }
+    return { status: 400 };
+  } catch (error) {
+    return { status: 500 };
+  }
+}
