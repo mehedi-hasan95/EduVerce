@@ -27,9 +27,12 @@ export const InfinityGroups = () => {
       loader={<SkeletonType element="POST" />}
     >
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 my-10">
-        {groupLengh.map((item) => (
-          <GroupCard item={item as GroupStateProps} key={item?.id} />
-        ))}
+        {groupLengh.map(
+          (item) =>
+            item !== undefined && (
+              <GroupCard item={item as GroupStateProps} key={item?.id} />
+            )
+        )}
       </div>
     </InfiniteScroll>
   );

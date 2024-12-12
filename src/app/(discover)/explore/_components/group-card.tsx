@@ -18,7 +18,7 @@ export const GroupCard = ({ item }: Props) => {
             alt=""
             height={300}
             width={300}
-            className="w-full opacity-70 h-56"
+            className="w-full opacity-70 aspect-video"
           />
         </CardHeader>
         <div className="p-6">

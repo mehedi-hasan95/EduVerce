@@ -13,7 +13,7 @@ type Props = {
 };
 export const SearchedGroup = ({ data, searching, query }: Props) => {
   return (
-    <div className="container grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-6 mt-36">
+    <div className="container grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-6 mt-5 md:mt-8">
       <Loader loading={searching} className="lg:col-span-3 md:col-span-2">
         {data.length > 0 ? (
           data.map((item) => <GroupCard item={item} key={item.id} />)

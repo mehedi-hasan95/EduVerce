@@ -1,6 +1,5 @@
 import { onGetUserDetails } from "@/actions/auth";
 import BackdropGradient from "@/components/common/backdrop-gradient";
-import { Search } from "@/components/common/search";
 import { TextGradient } from "@/components/common/text-gradient";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { CATEGORY_MENUS } from "@/constants/menus";
 import Link from "next/link";
+import { ExploreSearch } from "../_component/explore-search";
 
 const ExplorePageLayout = async ({
   children,
@@ -42,13 +42,7 @@ const ExplorePageLayout = async ({
         className="w-4/12 md:w-5/12 xl:w-3/12 xl:h-2/6 h-3/6"
         containerClass="items-center"
       >
-        <Search
-          placeholder="Search for group"
-          searchType="GROUPS"
-          glass
-          inputStyle="lg:w-[500px] text-lg h-auto z-[9999]"
-          className="rounded-3xl border-themeGray py-2 px-5 mt-10 mb-3"
-        />
+        <ExploreSearch />
         <Carousel
           opts={{
             align: "start",
