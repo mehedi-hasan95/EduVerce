@@ -5,7 +5,6 @@ type Props = {
 };
 const Settings = async ({ params }: Props) => {
   const { groupId } = await params;
-  console.log(groupId);
   return (
     <div>
       <h3 className="text-2xl md:text-3xl lg:text-4xl">Group Settings</h3>

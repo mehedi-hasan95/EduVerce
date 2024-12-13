@@ -431,7 +431,6 @@ export const onGetAllGroup = async (
     const total = await db.group.count();
 
     if (groups && groups.length > 0) {
-      console.log("Problem: ", groups);
       return {
         status: 200,
         groups,
@@ -444,33 +443,3 @@ export const onGetAllGroup = async (
     return { status: 500 };
   }
 };
-
-// export const onGetSingelGroup = async (page: number, limit: number) => {
-//   try {
-//     const skip = (page - 1) * limit;
-
-//     const groups = await db.group.findMany({
-//       where: {
-//         category: "next.js",
-//       },
-//       take: limit,
-//       skip: skip,
-//       orderBy: {
-//         createdAt: "desc",
-//       },
-//     });
-
-//     const total = await db.group.count();
-
-//     if (groups && groups.length > 0) {
-//       return {
-//         status: 200,
-//         groups,
-//         hasMore: skip + groups.length < total,
-//       };
-//     }
-//     return { status: 400 };
-//   } catch (error) {
-//     return { status: 500 };
-//   }
-// };

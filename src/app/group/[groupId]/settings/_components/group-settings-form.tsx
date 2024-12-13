@@ -87,7 +87,7 @@ export const GroupSettingsForm = ({ groupId }: { groupId: string }) => {
   }
 
   return (
-    <div className="max-w-2xl mt-10">
+    <div className="max-w-2xl mt-10 pb-10">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -182,7 +182,9 @@ export const GroupSettingsForm = ({ groupId }: { groupId: string }) => {
           {isPending ? (
             <LoadingButton />
           ) : (
-            <Button type="submit">Submit</Button>
+            <Button type="submit" variant="outline">
+              Update
+            </Button>
           )}
         </form>
       </Form>

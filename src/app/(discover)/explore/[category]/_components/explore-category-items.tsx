@@ -40,27 +40,7 @@ export const ExploreCategoryItems = ({ category }: Props) => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 my-10">
           {groupLengh.map(
             (item) =>
-              item != undefined && (
-                <Card key={item.id}>
-                  <CardHeader>
-                    <Image
-                      src={item?.thumbnail ? item.thumbnail : "/no-preview.jpg"}
-                      alt=""
-                      height={300}
-                      width={300}
-                      className="w-full opacity-70 aspect-video"
-                    />
-                  </CardHeader>
-                  <div className="p-6">
-                    <h3 className="text-lg text-themeTextGray font-bold">
-                      {item?.name}
-                    </h3>
-                    <p className="text-base text-themeTextGray">
-                      {item?.description && descLength(item.description, 200)}
-                    </p>
-                  </div>
-                </Card>
-              )
+              item != undefined && <GroupCard item={item} key={item.id} />
           )}
         </div>
       </InfiniteScroll>

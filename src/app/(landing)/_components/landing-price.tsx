@@ -52,7 +52,7 @@ export const LandingPrice = () => {
               </p>
             </div>
           </CardContent>
-          <Link href="#">
+          <Link href="/group/create">
             <Button
               variant={"outline"}
               className="font-semibold border-themeTextGray"

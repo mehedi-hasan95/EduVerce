@@ -18,7 +18,7 @@ export default function ExploreLoading() {
             <stop offset="1" stopColor="#F4C543" stopOpacity="0"></stop>
           </radialGradient>
           <circle
-            transformOrigin="center"
+            transform-origin="center"
             fill="none"
             stroke="url(#a8)"
             strokeWidth="8"
@@ -41,7 +41,7 @@ export default function ExploreLoading() {
             ></animateTransform>
           </circle>
           <circle
-            transformOrigin="center"
+            transform-origin="center"
             fill="none"
             opacity=".2"
             stroke="#F4C543"

@@ -106,6 +106,6 @@ export const onSigninUser = async (clerkId: string) => {
     return { status: 400, message: "Opps! Something went wrong" };
   } catch (error) {
     console.error(error);
-    return { status: 400, message: "Opps! Something went wrong" };
+    return { status: 400, message: "Opps! Something went wrong 2" };
   }
 };

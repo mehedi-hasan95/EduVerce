@@ -6,7 +6,7 @@ const CallbackSignIn = async () => {
   if (!user) return redirect("/sign-in");
   const authUser = await onSigninUser(user.id);
   if (authUser.status === 207) {
-    return redirect(`/group/${authUser.groupId}/channel/${authUser.groupId}`);
+    return redirect(`/group/${authUser.groupId}/channel/${authUser.channelId}`);
   }
   if (authUser.status === 200) {
     return redirect("/group/create");
