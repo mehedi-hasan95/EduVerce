@@ -22,10 +22,10 @@ const GroupId = async ({ params }: Props) => {
     queryFn: () => onGetGroupInfo(groupId),
   });
 
-  await query.prefetchQuery({
-    queryKey: ["active-subscription"],
-    queryFn: () => onGetActiveSubscription(groupId),
-  });
+  // await query.prefetchQuery({
+  //   queryKey: ["active-subscription"],
+  //   queryFn: () => onGetActiveSubscription(groupId),
+  // });
   const user = await onGetUserDetails();
   return (
     <HydrationBoundary state={dehydrate(query)}>

@@ -443,3 +443,42 @@ export const onGetAllGroup = async (
     return { status: 500 };
   }
 };
+
+export const onUpdateGroupGallery = async (
+  groupid: string,
+  content: string
+) => {
+  console.log(content);
+  try {
+    const mediaLimit = await db.group.findUnique({
+      where: {
+        id: groupid,
+      },
+      select: {
+        gallery: true,
+      },
+    });
+
+    if (mediaLimit && mediaLimit?.gallery.length < 6) {
+      await db.group.update({
+        where: {
+          id: groupid,
+        },
+        data: {
+          gallery: {
+            push: content,
+          },
+        },
+      });
+      revalidatePath(`/about/${groupid}`);
+      return { status: 200, message: "Upload done" };
+    }
+
+    return {
+      status: 400,
+      message: "Looks like your gallery has the maximum media allowed",
+    };
+  } catch (error) {
+    return { status: 400, message: "Looks like something went wrong" };
+  }
+};

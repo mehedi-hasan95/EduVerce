@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@/components/common/loading-button";
+import { MediaGallery } from "./media-gallery";
 
 const formSchema = z.object({
   htmldescription: z
@@ -103,12 +104,14 @@ export const GroupAbout = ({ groupId, userId }: Props) => {
       </div>
       {groupInfo.gallery.length > 0 && (
         <div className="relative rounded-xl">
-          <div className="img--overlay absolute h-2/6 bottom-0 w-full z-50" />
+          <div className="" />
           {activeMedia?.type === "IMAGE" ? (
             <Image
               src={activeMedia.url as string}
+              height={500}
+              width={500}
               alt="group-img"
-              className="w-full aspect-video z-20 rounded-t-xl"
+              className="w-full h-auto aspect-video z-20 rounded-t-xl"
             />
           ) : activeMedia?.type === "LOOM" ? (
             <div className="w-full aspect-video">
@@ -132,6 +135,13 @@ export const GroupAbout = ({ groupId, userId }: Props) => {
           )}
         </div>
       )}
+
+      <MediaGallery
+        gallery={groupInfo.gallery}
+        groupOwner={groupOwner}
+        groupId={groupId}
+        onActive={onSetActiveMedia}
+      />
 
       {groupOwner ? (
         <Form {...form}>

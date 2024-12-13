@@ -1,5 +1,4 @@
 import { uploadImage } from "@/lib/upload-image-api";
-import { utapi } from "@/lib/uploadthing-server";
 import {
   CheckSquare,
   Code,
