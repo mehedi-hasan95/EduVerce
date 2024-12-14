@@ -14,12 +14,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UpdateGallerySchema } from "./test/schema";
 import { UploadFile } from "@/lib/file-upload";
 import { useTransition } from "react";
 import { onUpdateGroupGallery } from "@/actions/group";
 import { toast } from "sonner";
 import { LoadingButton } from "@/components/common/loading-button";
+import { UpdateGallerySchema } from "@/schemas/schemas";
 
 type Props = {
   groupId: string;

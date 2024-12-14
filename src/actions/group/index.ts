@@ -482,3 +482,24 @@ export const onUpdateGroupGallery = async (
     return { status: 400, message: "Looks like something went wrong" };
   }
 };
+
+export const onJoinGroup = async (groupId: string) => {
+  try {
+    const user = await onGetUserDetails();
+    const member = await db.group.update({
+      where: { id: groupId },
+      data: {
+        member: {
+          create: {
+            userId: user?.id,
+          },
+        },
+      },
+    });
+    if (member) {
+      return { status: 200 };
+    }
+  } catch (error) {
+    return { status: 404 };
+  }
+};

@@ -96,7 +96,7 @@ export const GroupAbout = ({ groupId, userId }: Props) => {
   }
 
   return (
-    <div className="flex flex-col space-y-6 container mx-auto px-6">
+    <div className="flex flex-col space-y-6">
       <div>
         <h2 className="font-bold text-[56px] leading-none md:leading-normal">
           {groupInfo.name}

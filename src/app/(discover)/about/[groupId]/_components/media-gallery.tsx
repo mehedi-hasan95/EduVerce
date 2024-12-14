@@ -1,9 +1,9 @@
 import { validateURLString } from "@/lib/utils";
 import Image from "next/image";
-import { GlassModal } from "./test/glass-modal";
 import { Card, CardContent } from "@/components/ui/card";
 import { BadgePlus } from "lucide-react";
 import { MediaGallerYForm } from "./media-gallery-form";
+import { GlassModal } from "@/components/common/glass-modal";
 
 type Props = {
   gallery: string[];

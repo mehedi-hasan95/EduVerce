@@ -7,6 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { GroupAbout } from "./_components/group-about";
+import { AboutGroupWidget } from "./_components/about-widget/about-group-widget";
 
 type Props = {
   params: Promise<{
@@ -29,7 +30,14 @@ const GroupId = async ({ params }: Props) => {
   const user = await onGetUserDetails();
   return (
     <HydrationBoundary state={dehydrate(query)}>
-      <GroupAbout groupId={groupId} userId={user?.id as string} />
+      <div className="grid lg:grid-cols-3 gap-10 container mx-auto px-6">
+        <div className="lg:col-span-2">
+          <GroupAbout groupId={groupId} userId={user?.id as string} />
+        </div>
+        <div className="col-span-1">
+          <AboutGroupWidget groupId={groupId} userId={user?.id} />
+        </div>
+      </div>
     </HydrationBoundary>
   );
 };
