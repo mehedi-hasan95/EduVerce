@@ -26,6 +26,7 @@ type Props = {
   name: string;
   rows?: number;
   options?: { value: string; label: string; id: string }[];
+  disabled?: boolean;
 };
 
 export const FormGenerator = ({
@@ -38,6 +39,7 @@ export const FormGenerator = ({
   rows,
   options,
   type,
+  disabled,
 }: Props) => {
   switch (inputType) {
     case "input":
@@ -50,6 +52,7 @@ export const FormGenerator = ({
               {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
               <FormControl>
                 <Input
+                  disabled={disabled}
                   type={type}
                   id={id}
                   placeholder={placeholder}
@@ -71,6 +74,7 @@ export const FormGenerator = ({
               {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
               <FormControl>
                 <Textarea
+                  disabled={disabled}
                   className="resize-none"
                   placeholder={placeholder}
                   {...field}
@@ -85,6 +89,7 @@ export const FormGenerator = ({
     case "select":
       return (
         <FormField
+          disabled={disabled}
           control={form.control}
           name={name}
           render={({ field }) => (

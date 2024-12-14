@@ -24,7 +24,7 @@ import { UpdateGallerySchema } from "@/schemas/schemas";
 type Props = {
   groupId: string;
 };
-export const MediaGallerYForm = ({ groupId }: Props) => {
+export const MediaGalleryForm = ({ groupId }: Props) => {
   const [isPending, statrTransaction] = useTransition();
   // 1. Define your form.
   const form = useForm<z.infer<typeof UpdateGallerySchema>>({
@@ -76,7 +76,7 @@ export const MediaGallerYForm = ({ groupId }: Props) => {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Group Image</FormLabel>
               <FormControl>
                 <UploadFile
                   endPoint="chapterIcon"

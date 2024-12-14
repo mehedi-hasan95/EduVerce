@@ -2,8 +2,8 @@ import { validateURLString } from "@/lib/utils";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { BadgePlus } from "lucide-react";
-import { MediaGallerYForm } from "./media-gallery-form";
 import { GlassModal } from "@/components/common/glass-modal";
+import { MediaGalleryForm } from "./media-gallery-form";
 
 type Props = {
   gallery: string[];
@@ -91,7 +91,7 @@ export const MediaGallery = ({
             </Card>
           }
         >
-          <MediaGallerYForm groupId={groupId} />
+          <MediaGalleryForm groupId={groupId} />
         </GlassModal>
       ) : (
         <></>

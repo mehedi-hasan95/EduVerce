@@ -1,9 +1,16 @@
-import { onGetGroupChannels, onJoinGroup } from "@/actions/group";
+import {
+  onGetGroupChannels,
+  onGetGroupSubscriptions,
+  onJoinGroup,
+} from "@/actions/group";
 import { onGetGroupSubscriptionPaymentIntent } from "@/actions/stripe";
-import { onGetActiveSubscription } from "@/actions/subscription";
+import {
+  onActivateSubscription,
+  onGetActiveSubscription,
+} from "@/actions/subscription";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StripeCardElement } from "@stripe/stripe-js";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -75,4 +82,27 @@ export const useJoinGroup = (groupId: string) => {
   const onPayToJoin = () => mutate();
 
   return { onPayToJoin, isPending };
+};
+
+export const useAllSubscriptions = (groupId: string) => {
+  const { data } = useQuery({
+    queryKey: ["group-subscriptions"],
+    queryFn: () => onGetGroupSubscriptions(groupId),
+  });
+
+  const client = useQueryClient();
+  const { mutate } = useMutation({
+    mutationKey: ["group-subscriptions"],
+    mutationFn: (data: { id: string }) => onActivateSubscription(data.id),
+    onSuccess: (data) =>
+      toast(data?.status === 200 ? "Success" : "Error", {
+        description: data?.message,
+      }),
+    onSettled: async () => {
+      return await client.invalidateQueries({
+        queryKey: ["group-subscriptions"],
+      });
+    },
+  });
+  return { data, mutate };
 };

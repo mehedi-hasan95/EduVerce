@@ -34,7 +34,7 @@ export function NavProjects({ groupId }: { groupId: string }) {
   const { onDeleteChannel } = useChannelHooks(groupId);
   const pathName = usePathname();
   const currentPage = pathName.split("/").pop();
-  if (currentPage?.includes("settings")) {
+  if (pathName?.includes("settings")) {
     return (
       <SidebarGroup>
         <SidebarGroupLabel>Channels</SidebarGroupLabel>
