@@ -19,7 +19,7 @@ const GroupId = async ({ params }: Props) => {
   const query = new QueryClient();
 
   await query.prefetchQuery({
-    queryKey: ["about-group-info"],
+    queryKey: ["group-info"],
     queryFn: () => onGetGroupInfo(groupId),
   });
 
@@ -35,7 +35,7 @@ const GroupId = async ({ params }: Props) => {
           <GroupAbout groupId={groupId} userId={user?.id as string} />
         </div>
         <div className="col-span-1">
-          <AboutGroupWidget groupId={groupId} userId={user?.id} />
+          <AboutGroupWidget groupId={groupId} />
         </div>
       </div>
     </HydrationBoundary>

@@ -8,9 +8,8 @@ import { GroupJoinButton } from "./group-join-button";
 
 type Props = {
   groupId?: string;
-  userId?: string;
 };
-export const AboutGroupWidget = ({ groupId, userId }: Props) => {
+export const AboutGroupWidget = ({ groupId }: Props) => {
   const { groupInfo, groupOwner } = useGroupInfo();
   return (
     <Card className="lg:sticky top-5 mt-10 overflow-hidden">

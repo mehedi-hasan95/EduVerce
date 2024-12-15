@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const useGroupInfo = () => {
   const { data } = useQuery({
-    queryKey: ["about-group-info"],
+    queryKey: ["group-info"],
   });
 
   const router = useRouter();

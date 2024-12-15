@@ -7,7 +7,6 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { onGetUserDetails } from "../auth";
 import { revalidatePath } from "next/cache";
-import { NextRequest } from "next/server";
 
 export const onGetAffiliateInfo = async (id: string) => {
   try {

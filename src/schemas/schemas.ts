@@ -61,3 +61,29 @@ export const UpdateGallerySchema = z.object({
     .optional()
     .or(z.literal("").transform(() => undefined)),
 });
+
+export const createPostSchema = z.object({
+  title: z
+    .string()
+    .min(3, { message: "Titel must have atleast 3 characters" })
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  content: z
+    .string()
+    .min(100, {
+      message: "description must have atleast 100 characters",
+    })
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  htmlContent: z
+    .string()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  jsonContent: z
+    .string()
+    .min(5, {
+      message: "description must have atleast 5 characters",
+    })
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+});

@@ -40,7 +40,7 @@ export const onGetChannelInfo = async (id: string) => {
     if (channelInfo) {
       return { status: 200, channelInfo };
     }
-    return { status: 404 };
+    // return { status: 404 };
   } catch (error) {
     return { status: 400 };
   }

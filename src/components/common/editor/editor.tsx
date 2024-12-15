@@ -36,7 +36,7 @@ type Props = {
   textContent: string | undefined;
   setTextContent: React.Dispatch<React.SetStateAction<string | undefined>>;
   onEdit?: boolean;
-  // inline?: boolean;
+  inline?: boolean;
   disabled?: boolean;
   htmlContent?: string | undefined;
   setHtmlContent?: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -49,7 +49,7 @@ const Editor = ({
   setTextContent,
   textContent,
   onEdit,
-  // inline,
+  inline,
   disabled,
   htmlContent,
   setHtmlContent,
@@ -63,7 +63,7 @@ const Editor = ({
 
   return (
     <div>
-      {htmlContent && !onEdit ? (
+      {htmlContent && !onEdit && inline ? (
         <HtmlParser html={htmlContent} />
       ) : (
         <EditorRoot>

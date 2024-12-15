@@ -159,7 +159,7 @@ export const GroupAbout = ({ groupId, userId }: Props) => {
                     <Editor
                       onEdit={onEditDescription}
                       max={10000}
-                      // inline
+                      inline
                       min={5}
                       disabled={userId === groupInfo.userId ? false : true}
                       textContent={onDescription}
