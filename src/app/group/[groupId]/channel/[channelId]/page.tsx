@@ -19,7 +19,7 @@ const ChannelId = async ({ params }: Props) => {
   const { channelId, groupId } = await params;
   await query.prefetchQuery({
     queryKey: ["channel-info"],
-    queryFn: () => onGetChannelInfo(channelId),
+    queryFn: () => onGetChannelInfo(channelId, 1, 6),
   });
   await query.prefetchQuery({
     queryKey: ["group-info"],

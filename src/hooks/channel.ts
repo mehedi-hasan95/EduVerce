@@ -54,27 +54,10 @@ export const useChannelHooks = (groupId: string) => {
   return { mutate, isPending, onDeleteChannel, channelDeleteVariables };
 };
 
-// export const useChannelPage = (channelId: string) => {
-//   const { data } = useQuery({
-//     queryKey: ["channel-info"],
-//     queryFn: () => onGetChannelInfo(channelId),
-//   });
-//   const mutation = useMutationState({
-//     filters: { mutationKey: ["create-post"], status: "pending" },
-//     select: (mutation) => {
-//       return {
-//         status: mutation.state.status,
-//         state: mutation.state.variables as any,
-//       };
-//     },
-//   });
-//   return { data, mutation };
-// };
-
 export const useChannelPage = (channelid: string) => {
   const { data } = useQuery({
     queryKey: ["channel-info"],
-    queryFn: () => onGetChannelInfo(channelid),
+    queryFn: () => onGetChannelInfo(channelid, 1, 6),
   });
 
   const mutation = useMutationState({

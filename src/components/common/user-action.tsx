@@ -10,20 +10,14 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { onGetUserDetails, onSigninUser } from "@/actions/auth";
+import { onGetUserDetails } from "@/actions/auth";
 import { SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ArrowRightFromLine } from "lucide-react";
-import { currentUser } from "@clerk/nextjs/server";
 
 export const UserAction = async () => {
   const user = await onGetUserDetails();
-  const clerkUser = await currentUser();
-  let authUser;
-  if (user?.id) {
-    authUser = await onSigninUser(clerkUser?.id as string);
-  }
 
   return (
     <>
@@ -53,9 +47,7 @@ export const UserAction = async () => {
                 <span>Billing</span>
                 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
               </DropdownMenuItem>
-              <Link
-                href={`/group/${authUser?.groupId}/channel/${authUser?.channelId}`}
-              >
+              <Link href={`/callback/sign-in`}>
                 <DropdownMenuItem className="cursor-pointer">
                   <Settings />
                   <span>Settings</span>

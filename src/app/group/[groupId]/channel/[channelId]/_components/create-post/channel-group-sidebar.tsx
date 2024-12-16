@@ -11,22 +11,26 @@ type Props = {
 export const ChannelGroupSidebar = ({ groupId }: Props) => {
   const { groupInfo } = useGroupInfo();
   return (
-    <GlassCard>
-      <CardHeader>
-        <Image
-          src={groupInfo?.thumbnail ? groupInfo?.thumbnail : "/no-preview.jpg"}
-          alt="group info"
-          height={300}
-          width={300}
-          className="h-auto w-full"
-        />
-      </CardHeader>
-      <CardContent>
-        <h2 className="text-xl md:text-2xl font-bold">{groupInfo.name}</h2>
-        {groupInfo?.description && (
-          <p>{descLength(groupInfo?.description, 150)}</p>
-        )}
-      </CardContent>
-    </GlassCard>
+    <div className="lg:sticky lg:top-5 mt-10 lg:mt-0 rounded-xl overflow-hidden">
+      <GlassCard>
+        <CardHeader>
+          <Image
+            src={
+              groupInfo?.thumbnail ? groupInfo?.thumbnail : "/no-preview.jpg"
+            }
+            alt="group info"
+            height={300}
+            width={300}
+            className="h-auto w-full"
+          />
+        </CardHeader>
+        <CardContent>
+          <h2 className="text-xl md:text-2xl font-bold">{groupInfo.name}</h2>
+          {groupInfo?.description && (
+            <p>{descLength(groupInfo?.description, 150)}</p>
+          )}
+        </CardContent>
+      </GlassCard>
+    </div>
   );
 };

@@ -4,14 +4,20 @@
 import db from "@/lib/db";
 import { onGetUserDetails } from "../auth";
 
-export const onGetChannelInfo = async (id: string) => {
+export const onGetChannelInfo = async (
+  id: string,
+  page: number,
+  limit: number
+) => {
   try {
     const user = await onGetUserDetails();
+    const skip = (page - 1) * limit;
     const channelInfo = await db.channel.findUnique({
       where: { id },
       include: {
         posts: {
-          take: 3,
+          take: limit,
+          skip: skip,
           orderBy: { createdAt: "desc" },
           include: {
             channel: { select: { name: true } },
@@ -37,10 +43,17 @@ export const onGetChannelInfo = async (id: string) => {
         },
       },
     });
+    const total = await db.post.count({
+      where: { channelId: id },
+    });
     if (channelInfo) {
-      return { status: 200, channelInfo };
+      return {
+        status: 200,
+        channelInfo,
+        hasMore: skip + channelInfo?.posts?.length < total,
+        total,
+      };
     }
-    // return { status: 404 };
   } catch (error) {
     return { status: 400 };
   }
