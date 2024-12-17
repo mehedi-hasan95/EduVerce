@@ -2,6 +2,7 @@ import {
   onChannelDelete,
   onCreateNewChannel,
   onGetChannelInfo,
+  onLikeChannelPost,
 } from "@/actions/channel";
 import {
   useMutation,
@@ -96,4 +97,27 @@ export const useCrateChannelPost = (channelId: string) => {
     setOnHtmlDescription,
     onHtmlDescription,
   };
+};
+
+export const useLikeChannelPost = (postId: string) => {
+  const client = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: { likeid: string }) =>
+      onLikeChannelPost(postId, data.likeid),
+    onSuccess: (data) => {
+      toast(data.status === 200 ? "Success" : "Error", {
+        description: data.message,
+      });
+    },
+    onSettled: async () => {
+      await client.invalidateQueries({
+        queryKey: ["unique-post"],
+      });
+      return await client.invalidateQueries({
+        queryKey: ["channel-infinity-scroll"],
+      });
+    },
+  });
+
+  return { mutate, isPending };
 };

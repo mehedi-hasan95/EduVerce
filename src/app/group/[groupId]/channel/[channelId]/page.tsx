@@ -10,6 +10,7 @@ import { CreateNewPost } from "./_components/create-post/create-new-post";
 import { onGetUserDetails } from "@/actions/auth";
 import { ChannelGroupSidebar } from "./_components/create-post/channel-group-sidebar";
 import { PostFeed } from "./_components/create-post/post-feed";
+import { ChannelNav } from "./_components/nav/channel-nav";
 
 type Props = {
   params: Promise<{ channelId: string; groupId: string }>;
@@ -33,6 +34,7 @@ const ChannelId = async ({ params }: Props) => {
           <LeaderBoard />
         </div>
         <div className="lg:col-span-2">
+          <ChannelNav channelId={channelId} groupId={groupId} />
           <CreateNewPost
             channelId={channelId}
             userImage={

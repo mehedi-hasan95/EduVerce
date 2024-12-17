@@ -122,3 +122,45 @@ export const onChannelDelete = async (groupId: string, channelId: string) => {
     return { status: 500, message: "Something went wrong" };
   }
 };
+
+export const onLikeChannelPost = async (postid: string, likeid: string) => {
+  try {
+    const user = await onGetUserDetails();
+
+    if (!user) {
+      return { status: 401, message: "Please login first" };
+    }
+    const liked = await db.like.findFirst({
+      where: {
+        id: likeid,
+        userId: user?.id,
+      },
+    });
+
+    if (liked) {
+      await db.like.delete({
+        where: {
+          id: likeid,
+          userId: user?.id,
+        },
+      });
+
+      return { status: 200, message: "You unliked this post" };
+    }
+
+    const like = await db.like.create({
+      data: {
+        id: likeid,
+        postId: postid,
+        userId: user?.id as string,
+      },
+    });
+
+    if (like) return { status: 200, message: "You liked this post" };
+
+    return { status: 404, message: "Post not found!" };
+  } catch (error) {
+    console.log(error);
+    return { status: 400, message: "Something went wrong" };
+  }
+};

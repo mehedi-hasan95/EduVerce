@@ -48,12 +48,6 @@ export const PostContent = ({ channelId }: { channelId: string }) => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof createPostSchema>) {
-    const data = {
-      title: values.title,
-      html: onHtmlDescription,
-      json: onJsonDescription,
-      text: onDescription,
-    };
     startTransaction(() => {
       onCreatePost(
         channelId,

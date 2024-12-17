@@ -1,5 +1,4 @@
 "use client";
-import { HtmlParser } from "@/components/common/html-parser";
 import { Card, CardContent } from "@/components/ui/card";
 import { useChannelPage } from "@/hooks/channel";
 import { PostAuthor } from "./post-author";
@@ -8,12 +7,18 @@ import { onGetChannelInfo } from "@/actions/channel";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SkeletonType from "@/components/common/skeleton-type";
 import { NoResult } from "@/components/common/no-result";
+import { Separator } from "@/components/ui/separator";
+import { Interactions } from "./interactions";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { descLength } from "@/lib/utils";
 
 type Props = {
   userId: string;
   channelId: string;
 };
 export const PostFeed = ({ channelId, userId }: Props) => {
+  const pathName = usePathname();
   const { data } = useChannelPage(channelId);
 
   const LIMIT = 6;
@@ -69,8 +74,23 @@ export const PostFeed = ({ channelId, userId }: Props) => {
                       }
                       username={item.author.firstName}
                     />
-                    <h2 className="text-2xl pt-5">{item.title}</h2>
-                    <HtmlParser html={item.htmlContent!} />
+                    <Link href={`${pathName}/${item.id}`}>
+                      <h2 className="text-2xl pt-5">{item.title}</h2>
+                      {descLength(item.content, 250)}
+                    </Link>
+                    <Separator className="mt-3" />
+                    <Interactions
+                      id={item.id}
+                      likes={item._count.likes}
+                      comments={item._count.comments}
+                      userid={userId}
+                      likedUser={
+                        item.likes.length > 0 ? item.likes[0].userId : undefined
+                      }
+                      likeid={
+                        item.likes.length > 0 ? item.likes[0].id : undefined
+                      }
+                    />
                   </CardContent>
                 </Card>
               )

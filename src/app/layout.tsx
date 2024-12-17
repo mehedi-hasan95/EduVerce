@@ -1,6 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import "./globals.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // import { Open_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/common/theme-provider";
@@ -38,6 +39,7 @@ export default function RootLayout({
               <ReactQueryProvider>
                 {children}
                 <Toaster />
+                <ReactQueryDevtools initialIsOpen={false} />
               </ReactQueryProvider>
             </ReduxProvider>
           </ThemeProvider>
