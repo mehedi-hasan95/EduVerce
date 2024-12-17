@@ -1,3 +1,4 @@
+import { COURSE_PRIVACY } from "@prisma/client";
 import { z } from "zod";
 
 export const CreateGroupSchema = z.object({
@@ -86,4 +87,20 @@ export const createPostSchema = z.object({
     })
     .optional()
     .or(z.literal("").transform(() => undefined)),
+});
+
+export const createCourseSchema = z.object({
+  name: z.string().min(3, { message: "Course name is atleast 3 characters" }),
+  thumbnail: z.string({ message: "Thumbnail is required" }),
+  description: z
+    .string()
+    .min(5, { message: "Description is atleast 5 characters" }),
+  privacy: z
+    .enum([
+      COURSE_PRIVACY.OPEN,
+      COURSE_PRIVACY.PRIVATE,
+      COURSE_PRIVACY.LAVEL_UNLOCK,
+    ])
+    .default(COURSE_PRIVACY.OPEN),
+  published: z.boolean().default(false),
 });

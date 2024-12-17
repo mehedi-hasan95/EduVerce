@@ -127,15 +127,15 @@ model Channel {
 }
 
 model Course {
-  id          String   @id @db.Uuid
+  id          String         @id @db.Uuid
   name        String
   thumbnail   String
-  published   Boolean  @default(false)
-  privacy     String
+  published   Boolean        @default(false)
+  privacy     COURSE_PRIVACY @default(OPEN)
   description String
-  createdAt   DateTime @default(now())
-  Group       Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId     String?  @db.Uuid
+  createdAt   DateTime       @default(now())
+  Group       Group?         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     String?        @db.Uuid
   modules     Module[]
 }
 
@@ -180,4 +180,10 @@ model Message {
 enum GROUP_PRIVACY {
   PUBLIC
   PRIVATE
+}
+
+enum COURSE_PRIVACY {
+  OPEN
+  PRIVATE
+  LAVEL_UNLOCK
 }

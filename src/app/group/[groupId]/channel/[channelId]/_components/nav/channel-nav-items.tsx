@@ -34,8 +34,8 @@ export const ChannelNavItems = ({ oriantation, groupId, channelId }: Props) => {
     },
     {
       id: "2",
-      label: "Course",
-      href: `/group/${groupId}/channel/${channelId}/course`,
+      label: "Courses",
+      href: `/group/${groupId}/courses`,
     },
     {
       id: "3",
