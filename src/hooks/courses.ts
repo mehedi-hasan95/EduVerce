@@ -127,6 +127,26 @@ export const useCourseModule = (courseId: string, groupId: string) => {
 
   const isEditing = (id: string) => editingModuleId === id;
 
+  // create new section
+  const {
+    mutate: mutateSection,
+    variables: sectionVariables,
+    isPending: pendingSection,
+  } = useMutation({
+    mutationFn: (data: { moduleId: string; sectionId: string }) =>
+      onCreateModuleSection(data.moduleId, data.sectionId),
+    onSuccess: (data) => {
+      toast(data.status === 200 ? "Success" : "Error", {
+        description: data.message,
+      });
+    },
+    onSettled: async () => {
+      return await client.invalidateQueries({
+        queryKey: ["course-modules"],
+      });
+    },
+  });
+
   return {
     data,
     onEditModule,
@@ -136,5 +156,9 @@ export const useCourseModule = (courseId: string, groupId: string) => {
     isPending,
     variables,
     groupOwner,
+    // for section
+    mutateSection,
+    sectionVariables,
+    pendingSection,
   };
 };
