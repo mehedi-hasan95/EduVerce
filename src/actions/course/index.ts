@@ -142,7 +142,7 @@ export const onUpdateModule = async (
       });
 
       if (title) {
-        return { status: 200, message: "Name successfully updated" };
+        return { status: 200, message: "Module name successfully updated" };
       }
 
       return {
