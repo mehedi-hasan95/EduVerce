@@ -12,6 +12,8 @@ type GlassModalProps = {
   children: React.ReactNode;
   title: string;
   description: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export const GlassModal = ({
@@ -19,9 +21,11 @@ export const GlassModal = ({
   children,
   title,
   description,
+  open,
+  onOpenChange,
 }: GlassModalProps) => {
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="bg-clip-padding backdrop-filter backdrop--blur__safari backdrop-blur-3xl bg-opacity-20 bg-themeGray border-themeGray">
         <DialogHeader>

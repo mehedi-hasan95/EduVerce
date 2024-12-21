@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { useChannelPage } from "@/hooks/channel";
 import { PostContent } from "./post-content";
+import { useState } from "react";
 
 type Props = {
   userImage: string;
@@ -11,8 +12,12 @@ type Props = {
   channelId: string;
 };
 export const CreateNewPost = ({ channelId, userImage, userName }: Props) => {
-  const { data, mutation } = useChannelPage(channelId);
+  const { data } = useChannelPage(channelId);
   const { name } = data?.channelInfo as { name: string };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
       <GlassModal
@@ -33,8 +38,10 @@ export const CreateNewPost = ({ channelId, userImage, userName }: Props) => {
         }
         description=""
         title={`Posting in > ${name}`}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
       >
-        <PostContent channelId={channelId} />
+        <PostContent channelId={channelId} onCloseModal={handleCloseModal} />
       </GlassModal>
     </>
   );

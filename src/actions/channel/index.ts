@@ -160,7 +160,6 @@ export const onLikeChannelPost = async (postid: string, likeid: string) => {
 
     return { status: 404, message: "Post not found!" };
   } catch (error) {
-    console.log(error);
     return { status: 400, message: "Something went wrong" };
   }
 };

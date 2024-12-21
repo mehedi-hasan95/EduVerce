@@ -447,7 +447,6 @@ export const onUpdateGroupGallery = async (
   groupid: string,
   content: string
 ) => {
-  console.log(content);
   try {
     const mediaLimit = await db.group.findUnique({
       where: {

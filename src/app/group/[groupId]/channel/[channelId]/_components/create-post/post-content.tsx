@@ -16,15 +16,19 @@ import { Input } from "@/components/ui/input";
 import { useCrateChannelPost } from "@/hooks/channel";
 import { createPostSchema } from "@/schemas/schemas";
 import Editor from "@/components/common/editor/editor";
-import { useTransition } from "react";
 import { onCreatePost } from "@/actions/post";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@/components/common/loading-button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const PostContent = ({ channelId }: { channelId: string }) => {
-  const [isPending, startTransaction] = useTransition();
+type Props = {
+  channelId: string;
+  onCloseModal: () => void;
+};
+export const PostContent = ({ channelId, onCloseModal }: Props) => {
   const router = useRouter();
+  const query = useQueryClient();
   const {
     onDescription,
     onHtmlDescription,
@@ -44,22 +48,33 @@ export const PostContent = ({ channelId }: { channelId: string }) => {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof createPostSchema>) {
-    startTransaction(() => {
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["create-post"],
+    mutationFn: async (values: z.infer<typeof createPostSchema>) =>
       onCreatePost(
         channelId,
         values.title!,
         onDescription!,
         onHtmlDescription!,
         JSON.stringify(onJsonDescription)
-      ).then((data) => {
-        toast(data.status === 200 ? "Success" : "Error", {
-          description: data.message,
-        });
-        router.refresh();
+      ),
+
+    onSuccess: (data) => {
+      toast(data.status === 200 ? "Success" : "Error", {
+        description: data.message,
       });
-    });
+      onCloseModal();
+      router.refresh();
+    },
+    onSettled: async () => {
+      return await query.invalidateQueries({
+        queryKey: ["channel-infinity-scroll"],
+      });
+    },
+  });
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof createPostSchema>) {
+    mutate(values);
   }
   return (
     <Form {...form}>
@@ -106,7 +121,13 @@ export const PostContent = ({ channelId }: { channelId: string }) => {
             </FormItem>
           )}
         />
-        {isPending ? <LoadingButton /> : <Button type="submit">Create</Button>}
+        {isPending ? (
+          <LoadingButton />
+        ) : (
+          <Button variant={"outline"} type="submit">
+            Create
+          </Button>
+        )}
       </form>
     </Form>
   );

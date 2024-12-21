@@ -20,7 +20,6 @@ type Props = {
 export const PostFeed = ({ channelId, userId }: Props) => {
   const pathName = usePathname();
   const { data } = useChannelPage(channelId);
-  console.log(data);
   const LIMIT = 6;
 
   const {
@@ -39,7 +38,6 @@ export const PostFeed = ({ channelId, userId }: Props) => {
   if (status === "pending") return <div>Loading...</div>;
   if (status === "error") return <div>error...</div>;
 
-  console.log("cp:", channelPosts);
   const groupLengh =
     channelPosts.pages.flatMap((page) => page?.channelInfo?.posts) ?? [];
   if (groupLengh.length < 1) {

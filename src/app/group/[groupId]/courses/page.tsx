@@ -4,8 +4,8 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { GroupCourseList } from "./_container/course-list";
-import { CourseCreate } from "./_container/course-create";
+import { GroupCourseList } from "./_components/course-list";
+import { CourseCreate } from "./_components/course-create";
 
 type Props = {
   params: Promise<{ groupId: string }>;
