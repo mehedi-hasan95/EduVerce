@@ -5,7 +5,7 @@ import { GlobalAccordion } from "./accordion";
 import { Input } from "@/components/ui/input";
 import { AccordionContent } from "@/components/ui/accordion";
 import Link from "next/link";
-import { CircleCheckBig, CircleDashed, PlusCircle } from "lucide-react";
+import { CircleCheckBig, CircleDashed, File, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { v4 } from "uuid";
 
@@ -26,7 +26,17 @@ export const CourseModuleList = ({ courseId, groupId }: Props) => {
     mutateSection,
     pendingSection,
     sectionVariables,
+
+    setActiveSection,
+    activeSection,
+    onEditSection,
+    sectionInputRef,
+    contentRef,
+    editSection,
+    sectionUpdatePending,
+    updateVariables,
   } = useCourseModule(courseId, groupId);
+
   return (
     <div className="flex flex-col">
       {data?.status === 200 &&
@@ -54,21 +64,41 @@ export const CourseModuleList = ({ courseId, groupId }: Props) => {
                 : module.title
             }
           >
-            <AccordionContent className="flex flex-col space-y-2">
+            <AccordionContent className="flex flex-col space-y-4 mt-2">
               {module.section.length ? (
                 module.section.map((section) => (
                   <Link
-                    href={`/group/${groupId}/courses/${courseId}/${section.id}`}
+                    href={
+                      groupOwner
+                        ? ""
+                        : `/group/${groupId}/courses/${courseId}/${section.id}`
+                    }
                     key={section.id}
-                    className="flex gap-x-3 items-center capitalize"
+                    className="flex gap-x-3 items-center capitalize text-md hover:underline"
+                    onDoubleClick={onEditSection}
+                    onClick={() => setActiveSection(section.id)}
+                    ref={contentRef}
                   >
                     {section.content ? (
                       <CircleCheckBig className="h-4 w-4" />
                     ) : (
                       <CircleDashed className="h-4 w-4" />
                     )}
-                    {section.name}
-                    {/* to-do icon render here  */}
+                    <File className="h-4 w-4" />
+                    {editSection && activeSection === section.id ? (
+                      <Input
+                        ref={sectionInputRef}
+                        className="px-2"
+                        autoFocus
+                        defaultValue={
+                          section.name === "New Section" ? "" : section.name
+                        }
+                      />
+                    ) : sectionUpdatePending && activeSection === section.id ? (
+                      updateVariables?.content
+                    ) : (
+                      section.name
+                    )}
                   </Link>
                 ))
               ) : (
@@ -78,21 +108,14 @@ export const CourseModuleList = ({ courseId, groupId }: Props) => {
                 <>
                   {pendingSection && sectionVariables && (
                     <Link
-                      // onClick={() =>
-                      //   setActiveSection(sectionVariables.sectionid)
-                      // }
+                      onClick={() =>
+                        setActiveSection(sectionVariables.sectionId)
+                      }
                       className="flex gap-x-3 items-center"
                       href={`/group/${groupId}/courses/${courseId}/${sectionVariables.sectionId}`}
                     >
                       <CircleDashed className="h-4 w-4" />
-                      {/* <IconRenderer
-                        icon={"doc"}
-                        mode={
-                          pathname.split("/").pop() === activeSection
-                            ? "LIGHT"
-                            : "DARK"
-                        }
-                      /> */}
+                      <File className="h-4 w-4" />
                       New Section
                     </Link>
                   )}

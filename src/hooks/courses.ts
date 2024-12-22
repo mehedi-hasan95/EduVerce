@@ -147,6 +147,61 @@ export const useCourseModule = (courseId: string, groupId: string) => {
     },
   });
 
+  // Start here ...............................................................
+  const contentRef = useRef<HTMLAnchorElement | null>(null);
+  const sectionInputRef = useRef<HTMLInputElement | null>(null);
+  const [editSection, setEditSection] = useState<boolean>(false);
+  const [activeSection, setActiveSection] = useState<string | undefined>(
+    undefined
+  );
+
+  const {
+    mutate: updateSection,
+    isPending: sectionUpdatePending,
+    variables: updateVariables,
+  } = useMutation({
+    mutationFn: (data: { type: "NAME"; content: string }) =>
+      onUpdateSection(activeSection!, data.type, data.content),
+    onMutate: () => setEditSection(false),
+    onSuccess: (data) => {
+      toast(data.status === 200 ? "Success" : "Error", {
+        description: data.message,
+      });
+    },
+    onSettled: async () => {
+      return await client.invalidateQueries({
+        queryKey: ["course-modules"],
+      });
+    },
+  });
+  const onEditSectionName = (event: Event) => {
+    if (sectionInputRef.current && contentRef.current) {
+      const target = event.target as Node | null;
+      if (
+        !sectionInputRef.current.contains(target) &&
+        !contentRef.current.contains(target)
+      ) {
+        if (sectionInputRef.current.value.trim()) {
+          updateSection({
+            type: "NAME",
+            content: sectionInputRef.current.value.trim(),
+          });
+        } else {
+          setEditSection(false);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", onEditSectionName, false);
+    return () => {
+      document.removeEventListener("click", onEditSectionName, false);
+    };
+  }, [activeSection]);
+
+  const onEditSection = () => setEditSection(true);
+
   return {
     data,
     onEditModule,
@@ -160,5 +215,15 @@ export const useCourseModule = (courseId: string, groupId: string) => {
     mutateSection,
     sectionVariables,
     pendingSection,
+
+    // update section
+    setActiveSection,
+    activeSection,
+    onEditSection,
+    sectionInputRef,
+    contentRef,
+    editSection,
+    sectionUpdatePending,
+    updateVariables,
   };
 };
