@@ -219,3 +219,17 @@ export const onCreateModuleSection = async (
     return { status: 400, message: "Oops! something went wrong" };
   }
 };
+
+export const onGetSectionInfo = async (id: string) => {
+  try {
+    const section = await db.section.findUnique({
+      where: { id },
+    });
+    if (section) {
+      return { status: 200, message: "Channel found", section };
+    }
+    return { status: 404, message: "Section not found" };
+  } catch (error) {
+    return { status: 400, message: "Oops! something went wrong" };
+  }
+};

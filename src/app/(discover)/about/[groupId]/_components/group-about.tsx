@@ -73,7 +73,7 @@ export const GroupAbout = ({ groupId, userId }: Props) => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit() {
     const data = {
       jsondescription: JSON.stringify(onJsonDescription),
       htmldescription: onHtmlDescription,

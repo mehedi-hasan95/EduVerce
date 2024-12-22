@@ -87,8 +87,6 @@ export const useCrateChannelPost = (channelId: string) => {
     string | undefined
   >(undefined);
 
-  const JsonContent = JSON.stringify(onJsonDescription);
-
   return {
     setOnDescription,
     onDescription,

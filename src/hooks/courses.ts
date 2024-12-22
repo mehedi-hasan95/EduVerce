@@ -3,6 +3,7 @@ import {
   onCreateModuleSection,
   onGetCourseModules,
   onGetGroupCourses,
+  onGetSectionInfo,
   onUpdateModule,
   onUpdateSection,
 } from "@/actions/course";
@@ -61,7 +62,7 @@ export const useCourseModule = (courseId: string, groupId: string) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const client = useQueryClient();
-
+  const pathName = usePathname();
   // get course module
   const { data } = useQuery({
     queryKey: ["course-modules", courseId],
@@ -147,7 +148,7 @@ export const useCourseModule = (courseId: string, groupId: string) => {
     },
   });
 
-  // Start here ...............................................................
+  // Section start here
   const contentRef = useRef<HTMLAnchorElement | null>(null);
   const sectionInputRef = useRef<HTMLInputElement | null>(null);
   const [editSection, setEditSection] = useState<boolean>(false);
@@ -200,9 +201,10 @@ export const useCourseModule = (courseId: string, groupId: string) => {
     };
   }, [activeSection]);
 
-  const onEditSection = () => setEditSection(true);
+  const onEditSection = () => setEditSection(groupOwner ? true : false);
 
   return {
+    pathName,
     data,
     onEditModule,
     isEditing,
@@ -226,4 +228,32 @@ export const useCourseModule = (courseId: string, groupId: string) => {
     sectionUpdatePending,
     updateVariables,
   };
+};
+
+export const useSectionNavBar = (sectionId: string) => {
+  const { data } = useQuery({
+    queryKey: ["section-info"],
+    queryFn: () => onGetSectionInfo(sectionId),
+  });
+
+  const client = useQueryClient();
+
+  const { isPending, mutate } = useMutation({
+    mutationFn: () => onUpdateSection(sectionId, "COMPLETE", ""),
+    onSuccess: async (data) => {
+      toast(data.status === 200 ? "Success" : "Error", {
+        description: data.message,
+      });
+      return await client.invalidateQueries({
+        queryKey: ["section-info"],
+      });
+    },
+    onSettled: async () => {
+      return await client.invalidateQueries({
+        queryKey: ["course-modules"],
+      });
+    },
+  });
+
+  return { data, mutate, isPending };
 };

@@ -15,6 +15,7 @@ type Props = {
 };
 export const CourseModuleList = ({ courseId, groupId }: Props) => {
   const {
+    pathName,
     data,
     onEditModule,
     isEditing,
@@ -68,23 +69,24 @@ export const CourseModuleList = ({ courseId, groupId }: Props) => {
               {module.section.length ? (
                 module.section.map((section) => (
                   <Link
-                    href={
-                      groupOwner
-                        ? ""
-                        : `/group/${groupId}/courses/${courseId}/${section.id}`
-                    }
+                    href={`/group/${groupId}/courses/${courseId}/${section.id}`}
                     key={section.id}
                     className="flex gap-x-3 items-center capitalize text-md hover:underline"
                     onDoubleClick={onEditSection}
                     onClick={() => setActiveSection(section.id)}
                     ref={contentRef}
                   >
-                    {section.content ? (
+                    {section.complete ? (
                       <CircleCheckBig className="h-4 w-4" />
                     ) : (
                       <CircleDashed className="h-4 w-4" />
                     )}
-                    <File className="h-4 w-4" />
+                    <File
+                      className={`h-4 w-4 ${
+                        pathName.split("/").pop() === section.id &&
+                        "text-green-500"
+                      }`}
+                    />
                     {editSection && activeSection === section.id ? (
                       <Input
                         ref={sectionInputRef}
