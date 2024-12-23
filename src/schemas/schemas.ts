@@ -104,3 +104,24 @@ export const createCourseSchema = z.object({
     .default(COURSE_PRIVACY.OPEN),
   published: z.boolean().default(false),
 });
+
+export const courseContentSchema = z.object({
+  content: z
+    .string()
+    .min(5, {
+      message: "description must have atleast 5 characters",
+    })
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  htmlcontent: z
+    .string()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  jsoncontent: z
+    .string()
+    .min(5, {
+      message: "description must have atleast 5 characters",
+    })
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+});

@@ -29,6 +29,7 @@ import { HtmlParser } from "../html-parser";
 const extensions = [...defaultExtensions, slashCommand, Video];
 
 type Props = {
+  name?: string;
   content: JSONContent | undefined;
   setContent: React.Dispatch<React.SetStateAction<JSONContent | undefined>>;
   min: number;
@@ -42,6 +43,7 @@ type Props = {
   setHtmlContent?: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 const Editor = ({
+  name,
   setContent,
   content,
   min,

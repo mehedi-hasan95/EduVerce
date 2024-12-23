@@ -4,6 +4,8 @@ import {
   onGetChannelInfo,
   onLikeChannelPost,
 } from "@/actions/channel";
+import { onUpdateCourseSectionContent } from "@/actions/course";
+import { courseContentSchema } from "@/schemas/schemas";
 import {
   useMutation,
   useMutationState,
@@ -11,8 +13,9 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { JSONContent } from "novel";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 
 export const useChannelHooks = (groupId: string) => {
   const client = useQueryClient();
@@ -118,4 +121,82 @@ export const useLikeChannelPost = (postId: string) => {
   });
 
   return { mutate, isPending };
+};
+
+export const useChannelSection = (
+  sectionId: string,
+  description: string | null,
+  jsonDescription: string | null,
+  htmlDescription: string | null
+) => {
+  const client = useQueryClient();
+  const editor = useRef<HTMLFormElement | null>(null);
+  const jsonContent =
+    jsonDescription !== null
+      ? JSON.parse(jsonDescription as string)
+      : undefined;
+
+  const [onJsonDescription, setJsonDescription] = useState<
+    JSONContent | undefined
+  >(jsonContent);
+
+  const [onDescription, setOnDescription] = useState<string | undefined>(
+    description || undefined
+  );
+
+  const [onHtmlDescription, setOnHtmlDescription] = useState<
+    string | undefined
+  >(htmlDescription || undefined);
+
+  const [onEditDescription, setOnEditDescription] = useState<boolean>(false);
+
+  const onEditTextEditor = (event: Event) => {
+    if (editor.current) {
+      if (editor.current.contains(event.target as Node | null)) {
+        setOnEditDescription(true);
+      } else {
+        setOnEditDescription(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", onEditTextEditor, false);
+    return () => {
+      document.removeEventListener("click", onEditTextEditor, false);
+    };
+  }, []);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (values: z.infer<typeof courseContentSchema>) =>
+      onUpdateCourseSectionContent(
+        sectionId,
+        values.htmlcontent!,
+        values.jsoncontent!,
+        values.content!
+      ),
+    onSuccess: (data) => {
+      toast(data.status === 200 ? "Success" : "Error", {
+        description: data.message,
+      });
+    },
+    onSettled: async () => {
+      return await client.invalidateQueries({
+        queryKey: ["section-info"],
+      });
+    },
+  });
+
+  return {
+    setOnDescription,
+    onDescription,
+    setJsonDescription,
+    onJsonDescription,
+    onEditDescription,
+    editor,
+    setOnHtmlDescription,
+    onHtmlDescription,
+    mutate,
+    isPending,
+  };
 };
