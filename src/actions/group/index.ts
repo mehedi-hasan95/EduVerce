@@ -501,3 +501,31 @@ export const onJoinGroup = async (groupId: string) => {
     return { status: 404 };
   }
 };
+
+export const onGetAffiliateLink = async (groupId: string) => {
+  try {
+    const affiliate = await db.affiliate.findUnique({
+      where: { groupId },
+      select: {
+        id: true,
+      },
+    });
+    return { status: 200, affiliate };
+  } catch (error) {
+    return { status: 400, message: "Opps! Something went wrong" };
+  }
+};
+
+export const onGetVeririedAffiliateLink = async (affiliatesId: string) => {
+  try {
+    const varifiedAffiliate = await db.affiliate.findUnique({
+      where: { id: affiliatesId },
+    });
+    if (varifiedAffiliate) {
+      return { status: 200 };
+    }
+    return { status: 404 };
+  } catch (error) {
+    return { status: 400 };
+  }
+};
