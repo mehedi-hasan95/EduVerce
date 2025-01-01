@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import { stripe } from "@/lib/stripe";
+import { onGetUserDetails } from "../auth";
 
 export const onGetStripeClientSecret = async () => {
   try {
@@ -73,5 +74,25 @@ export const onGetGroupSubscriptionPaymentIntent = async (groupid: string) => {
     }
   } catch (error) {
     return { status: 400, message: "Failed to load form" };
+  }
+};
+
+export const onGetStripeIntegration = async () => {
+  try {
+    const user = await onGetUserDetails();
+    const stripeId = await db.user.findUnique({
+      where: {
+        id: user?.id,
+      },
+      select: {
+        stripeId: true,
+      },
+    });
+
+    if (stripeId) {
+      return stripeId.stripeId;
+    }
+  } catch (error) {
+    console.log(error);
   }
 };

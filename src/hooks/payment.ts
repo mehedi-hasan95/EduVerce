@@ -1,3 +1,4 @@
+"use client";
 import {
   onGetGroupChannels,
   onGetGroupSubscriptions,
@@ -12,6 +13,7 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StripeCardElement } from "@stripe/stripe-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export const useActiveGroupSubscription = (groupId: string) => {
