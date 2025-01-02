@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import {
   onGetGroupChannels,
   onGetGroupSubscriptions,
@@ -25,13 +26,13 @@ export const useActiveGroupSubscription = (groupId: string) => {
   return { data };
 };
 
-export const useJoinFreeGroup = (groupid: string) => {
+export const useJoinFreeGroup = (groupId: string) => {
   const router = useRouter();
   const onJoinFreeGroup = async () => {
-    const member = await onJoinGroup(groupid);
+    const member = await onJoinGroup(groupId);
     if (member?.status === 200) {
-      const channels = await onGetGroupChannels(groupid);
-      router.push(`/group/${groupid}/channel/${channels?.channels?.[0].id}`);
+      const channels = await onGetGroupChannels(groupId);
+      router.push(`/group/${groupId}/channel/${channels?.channels?.[0].id}`);
     }
   };
 
@@ -107,4 +108,33 @@ export const useAllSubscriptions = (groupId: string) => {
     },
   });
   return { data, mutate };
+};
+
+export const useStripeConnect = (groupId: string) => {
+  const [onStripeAccountPending, setOnStripeAccountPending] =
+    useState<boolean>(false);
+
+  const onStripeConnect = async () => {
+    try {
+      setOnStripeAccountPending(true);
+      const response = await fetch(`/api/stripe/connect?groupId=${groupId}`, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const account = await response.json();
+        setOnStripeAccountPending(false);
+        if (account && account.url) {
+          window.location.href = account.url;
+        }
+      } else {
+        console.error("Failed to connect to Stripe:", response.statusText);
+        setOnStripeAccountPending(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setOnStripeAccountPending(false);
+    }
+  };
+
+  return { onStripeConnect, onStripeAccountPending };
 };

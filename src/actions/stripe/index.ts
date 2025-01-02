@@ -93,6 +93,6 @@ export const onGetStripeIntegration = async () => {
       return stripeId.stripeId;
     }
   } catch (error) {
-    console.log(error);
+    return { status: 400, message: "Failed to load form" };
   }
 };

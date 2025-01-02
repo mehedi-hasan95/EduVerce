@@ -14,9 +14,9 @@ const AffiliatesPage = async ({ params }: Props) => {
         <CardTitle>Affiliate Link</CardTitle>
         <CardDescription>Create and share an invitations link</CardDescription>
         <div className="my-5 flex justify-between p-3 items-center rounded-2xl gap-8 bg-themeBlack">
-          {`${process.env.AFFILIATES_URL}/${affiliate.affiliate?.id}`}
+          {`${process.env.BASE_URL}/affiliates/${affiliate.affiliate?.id}`}
           <CopyButton
-            content={`${process.env.AFFILIATES_URL}/${affiliate.affiliate?.id}`}
+            content={`${process.env.BASE_URL}/affiliates/${affiliate.affiliate?.id}`}
           />
         </div>
         <CardDescription>
