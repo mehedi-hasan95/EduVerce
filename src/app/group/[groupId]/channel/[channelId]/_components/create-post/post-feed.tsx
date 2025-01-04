@@ -82,7 +82,7 @@ export const PostFeed = ({ channelId, userId }: Props) => {
                       id={item.id}
                       likes={item._count.likes}
                       comments={item._count.comments}
-                      userid={userId}
+                      userId={userId}
                       likedUser={
                         item.likes.length > 0 ? item.likes[0].userId : undefined
                       }

@@ -5,7 +5,14 @@ import {
   onLikeChannelPost,
 } from "@/actions/channel";
 import { onUpdateCourseSectionContent } from "@/actions/course";
-import { courseContentSchema } from "@/schemas/schemas";
+import {
+  onCreateNewComment,
+  onGetCommentReplies,
+  onGetPostComments,
+  onGetPostInfo,
+} from "@/actions/post";
+import { courseContentSchema, CreateCommentSchema } from "@/schemas/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   useMutation,
   useMutationState,
@@ -14,6 +21,7 @@ import {
 } from "@tanstack/react-query";
 import { JSONContent } from "novel";
 import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -199,4 +207,53 @@ export const useChannelSection = (
     mutate,
     isPending,
   };
+};
+
+export const usePostInfo = (postId: string) => {
+  const { data } = useQuery({
+    queryKey: ["unique-post"],
+    queryFn: () => onGetPostInfo(postId),
+  });
+  return { data };
+};
+
+export const usePostComment = (postId: string) => {
+  const client = useQueryClient();
+  const { mutate, variables, isPending } = useMutation({
+    mutationFn: (data: { content: string; commentId: string }) =>
+      onCreateNewComment(postId, data.content, data.commentId),
+    onMutate: () => "",
+    onSuccess: (data) =>
+      toast(data?.status === 200 ? "Success" : "Error", {
+        description: data?.message,
+      }),
+
+    onSettled: async () => {
+      await client.invalidateQueries({
+        queryKey: ["unique-post", postId],
+      });
+      await client.invalidateQueries({
+        queryKey: ["post-comments", postId],
+      });
+    },
+  });
+  return { mutate, variables, isPending };
+};
+
+export const useAllComment = (postId: string) => {
+  const { data } = useQuery({
+    queryKey: ["post-comments", postId],
+    queryFn: () => onGetPostComments(postId),
+  });
+  return { data };
+};
+
+export const useGetReplies = (commentId: string) => {
+  const { isFetching, data } = useQuery({
+    queryKey: ["comment-replies", commentId],
+    queryFn: () => onGetCommentReplies(commentId),
+    enabled: Boolean(commentId),
+  });
+
+  return { isFetching, data };
 };

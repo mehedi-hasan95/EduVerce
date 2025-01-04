@@ -125,3 +125,9 @@ export const courseContentSchema = z.object({
     .optional()
     .or(z.literal("").transform(() => undefined)),
 });
+
+export const CreateCommentSchema = z.object({
+  comment: z
+    .string()
+    .min(1, { message: "Comment must have atleast 1 character" }),
+});

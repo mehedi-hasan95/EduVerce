@@ -36,3 +36,130 @@ export const onCreatePost = async (
     return { status: 400, message: "Something went wrong" };
   }
 };
+
+export const onGetPostInfo = async (postId: string) => {
+  try {
+    const user = await onGetUserDetails();
+    const post = await db.post.findUnique({
+      where: { id: postId },
+      include: {
+        author: {
+          select: {
+            firstName: true,
+            image: true,
+          },
+        },
+        channel: {
+          select: {
+            name: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: user?.id,
+          },
+          select: {
+            userId: true,
+            id: true,
+          },
+        },
+        comments: true,
+      },
+    });
+    if (post) {
+      return { status: 200, data: post };
+    }
+    return { status: 404, message: "Post not found" };
+  } catch (error) {
+    return { status: 400, message: "Something went wrong" };
+  }
+};
+
+export const onGetPostComments = async (postId: string) => {
+  try {
+    const comments = await db.comment.findMany({
+      where: {
+        postId: postId,
+        replied: false,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: true,
+        _count: {
+          select: {
+            reply: true,
+          },
+        },
+      },
+    });
+
+    if (comments && comments.length > 0) {
+      return { status: 200, comments };
+    }
+  } catch (error) {
+    return { status: 400 };
+  }
+};
+
+export const onCreateNewComment = async (
+  postId: string,
+  content: string,
+  commentId: string
+) => {
+  try {
+    const user = await onGetUserDetails();
+    if (!user?.id) {
+      return { status: 401, message: "Unauthorize user" };
+    }
+    const comment = await db.post.update({
+      where: { id: postId },
+      data: {
+        comments: {
+          create: {
+            userId: user.id,
+            content: content,
+            id: commentId,
+          },
+        },
+      },
+    });
+    if (comment) {
+      return { status: 200, message: "Comment successfully created" };
+    }
+  } catch (error) {
+    return { status: 400, message: "Something went wrong" };
+  }
+};
+
+export const onGetCommentReplies = async (commentId: string) => {
+  try {
+    const replies = await db.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+      select: {
+        reply: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (replies && replies.reply.length > 0) {
+      return { status: 200, replies: replies.reply };
+    }
+
+    return { status: 404, message: "No replies found" };
+  } catch (error) {
+    return { status: 400, message: "Oops something went wrong" };
+  }
+};

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 type InteractionsProps = {
   id: string;
   optimisitc?: boolean;
-  userid?: string;
+  userId?: string;
   likedUser?: string;
   likes: number;
   comments: number;
@@ -16,7 +16,7 @@ type InteractionsProps = {
 export const Interactions = ({
   id,
   optimisitc,
-  userid,
+  userId,
   likedUser,
   likes,
   comments,
@@ -37,13 +37,13 @@ export const Interactions = ({
             <ThumbsUp className="h-5 w-5" />
           ) : isPending ? (
             <span className="cursor-pointer">
-              {userid === likedUser ? (
+              {userId === likedUser ? (
                 <ThumbsUp className="h-5 w-5" />
               ) : (
                 <ThumbsUp className="fill-red-600 h-5 w-5" />
               )}
             </span>
-          ) : likedUser === userid ? (
+          ) : likedUser === userId ? (
             <span
               onClick={() =>
                 mutate({
@@ -66,7 +66,7 @@ export const Interactions = ({
               <ThumbsUp className="h-5 w-5" />
             </span>
           )}
-          {isPending ? (likedUser === userid ? likes - 1 : likes + 1) : likes}
+          {isPending ? (likedUser === userId ? likes - 1 : likes + 1) : likes}
         </span>
 
         <span className="flex gap-1 justify-center items-center">
