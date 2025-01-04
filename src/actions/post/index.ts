@@ -163,3 +163,36 @@ export const onGetCommentReplies = async (commentId: string) => {
     return { status: 400, message: "Oops something went wrong" };
   }
 };
+
+export const onCreateCommentReply = async (
+  postid: string,
+  commentId: string,
+  comment: string,
+  replyId: string
+) => {
+  try {
+    const user = await onGetUserDetails();
+    const reply = await db.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        reply: {
+          create: {
+            content: comment,
+            id: replyId,
+            postId: postid,
+            userId: user?.id as string,
+            replied: true,
+          },
+        },
+      },
+    });
+
+    if (reply) {
+      return { status: 200, message: "Reply posted" };
+    }
+  } catch (error) {
+    return { status: 400, message: "Oops something went wrong" };
+  }
+};

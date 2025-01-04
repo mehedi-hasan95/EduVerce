@@ -6,13 +6,13 @@ import {
 } from "@/actions/channel";
 import { onUpdateCourseSectionContent } from "@/actions/course";
 import {
+  onCreateCommentReply,
   onCreateNewComment,
   onGetCommentReplies,
   onGetPostComments,
   onGetPostInfo,
 } from "@/actions/post";
-import { courseContentSchema, CreateCommentSchema } from "@/schemas/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { courseContentSchema } from "@/schemas/schemas";
 import {
   useMutation,
   useMutationState,
@@ -21,7 +21,6 @@ import {
 } from "@tanstack/react-query";
 import { JSONContent } from "novel";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -248,6 +247,24 @@ export const useAllComment = (postId: string) => {
   return { data };
 };
 
+export const useReply = () => {
+  const [onReply, setOnReply] = useState<{
+    comment?: string;
+    reply: boolean;
+  }>({ comment: undefined, reply: false });
+
+  const [activeComment, setActiveComment] = useState<string | undefined>(
+    undefined
+  );
+
+  const onSetReply = (commentId: string) =>
+    setOnReply((prev) => ({ ...prev, comment: commentId, reply: true }));
+
+  const onSetActiveComment = (id: string) => setActiveComment(id);
+
+  return { onReply, onSetReply, onSetActiveComment, activeComment };
+};
+
 export const useGetReplies = (commentId: string) => {
   const { isFetching, data } = useQuery({
     queryKey: ["comment-replies", commentId],
@@ -256,4 +273,24 @@ export const useGetReplies = (commentId: string) => {
   });
 
   return { isFetching, data };
+};
+
+export const usePostReply = (postId: string, commentId: string) => {
+  const client = useQueryClient();
+  const { mutate, variables, isPending } = useMutation({
+    mutationFn: (data: { comment: string; replyId: string }) =>
+      onCreateCommentReply(postId, commentId, data.comment, data.replyId),
+    onMutate: () => "",
+    onSuccess: (data) => {
+      return toast(data?.status === 200 ? "Success" : "Error", {
+        description: data?.message,
+      });
+    },
+    onSettled: async () => {
+      await client.invalidateQueries({
+        queryKey: ["comment-replies", commentId],
+      });
+    },
+  });
+  return { mutate, variables, isPending };
 };
