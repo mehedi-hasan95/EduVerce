@@ -1,9 +1,11 @@
+import { onAddCustomDomain, onGetDomainConfig } from "@/actions/group";
 import { validateURLString } from "@/lib/utils";
 import { GroupStateProps } from "@/zustand/search-slice";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { JSONContent } from "novel";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export const useGroupInfo = () => {
   const { data } = useQuery({
@@ -100,5 +102,35 @@ export const useGroupAbout = (
     onSetActiveMedia,
     setOnHtmlDescription,
     onHtmlDescription,
+  };
+};
+
+export const useCustomDomain = (groupId: string) => {
+  const client = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ["domain-config"],
+    queryFn: () => onGetDomainConfig(groupId),
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: { domain: string }) =>
+      onAddCustomDomain(groupId, data.domain),
+    onSuccess: (data) => {
+      return toast(data.status === 200 ? "Success" : "Error", {
+        description: data.message,
+      });
+    },
+    onSettled: async () => {
+      return await client.invalidateQueries({
+        queryKey: ["domain-config"],
+      });
+    },
+  });
+
+  return {
+    isPending,
+    data,
+    mutate,
   };
 };

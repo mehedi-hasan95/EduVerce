@@ -529,3 +529,76 @@ export const onGetVeririedAffiliateLink = async (affiliatesId: string) => {
     return { status: 400 };
   }
 };
+
+export const onGetDomainConfig = async (groupId: string) => {
+  try {
+    const domain = await db.group.findUnique({
+      where: { id: groupId },
+      select: { domain: true },
+    });
+    if (domain && domain.domain) {
+      const response = await fetch(
+        `https://api.vercel.com/v10/domains/${domain.domain}/config?teamId=${process.env.TEAM_ID_VERCEL}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch domain configuration: ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+
+      return { status: data, domain: domain.domain };
+    }
+    return { status: 404 };
+  } catch (error) {
+    return { status: 400 };
+  }
+};
+
+export const onAddCustomDomain = async (groupId: string, domain: string) => {
+  try {
+    const addDomainHttpUrl = `https://api.vercel.com/v10/projects/${process.env.PROJECT_ID_VERCEL}/domains?teamId=${process.env.TEAM_ID_VERCEL}`;
+    //we now insert domain into our vercel project
+    //we make an http request to vercel
+    const response = await fetch(addDomainHttpUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: domain }),
+    });
+
+    if (response) {
+      const newDomain = await db.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          domain,
+        },
+      });
+
+      if (newDomain) {
+        return {
+          status: 200,
+          message: "Domain successfully added",
+        };
+      }
+    }
+
+    return { status: 404, message: "Group not found" };
+  } catch (error) {
+    console.log(error);
+    return { status: 400, message: "Oops something went wrong" };
+  }
+};
