@@ -11,9 +11,9 @@ const GroupCreatePage = async ({
   searchParams: Promise<{ [affiliate: string]: string }>;
 }) => {
   const user = await onGetUserDetails();
-  if (!user || !user.id) {
-    redirect("/sign-in");
-  }
+  // if (!user || !user.id) {
+  //   redirect("/sign-in");
+  // }
   const { affiliate } = await searchParams;
   const affiliateUser = await onGetAffiliateInfo(affiliate);
   return (
@@ -47,7 +47,7 @@ const GroupCreatePage = async ({
       )}
       <CreateGroup
         affiliate={affiliateUser.status === 200 ? true : false}
-        userId={user.id}
+        userId={user?.id as string}
         stripeId={affiliateUser.affiliateUser?.Group?.User.stripeId || ""}
       />
     </div>
