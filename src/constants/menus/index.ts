@@ -60,13 +60,6 @@ export const LANDING_MENUS: LandingMenus[] = [
     href: "/explore",
     icon: Compass,
   },
-  {
-    id: "5",
-    label: "dashboard",
-    href: "/dashboard",
-    hasUser: true,
-    icon: LayoutDashboard,
-  },
 ];
 
 type Category = {
